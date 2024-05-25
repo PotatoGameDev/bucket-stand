@@ -1,21 +1,21 @@
-#ifndef POTATO_BUCKET_PLAYER_H
-#define POTATO_BUCKET_PLAYER_H
+#ifndef POTATO_BUCKET_OBJECT_H
+#define POTATO_BUCKET_OBJECT_H
 
 #include "anim.h"
 #include "raylib.h"
+#include <string>
 #include <vector>
 
 namespace potato_bucket {
 
-class Player {
+class Object {
 private:
-    Anim anim;
-    Vector2 scale;
-
 public:
   Rectangle box;
+  Anim anim;
 
-  Player(float, float, float, float);
+  Object(float, float, float, float, std::string);
+  Object(Rectangle, std::string);
 
   void update();
   void draw();

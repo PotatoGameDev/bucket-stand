@@ -8,11 +8,11 @@ int main() {
   int screenWidth = 800;
   int screenHeight = 450;
 
-  InitWindow(screenWidth, screenHeight, "BucketGang");
+  InitWindow(screenWidth, screenHeight, "BucketStand");
 
   SetTargetFPS(60);
 
-  World world(screenWidth, screenHeight);
+  World world;
 
   while (!WindowShouldClose()) {
 
@@ -20,7 +20,6 @@ int main() {
 
     BeginDrawing();
     ClearBackground(BLACK);
-
     BeginMode2D(world.camera);
 
     world.draw();
@@ -30,6 +29,7 @@ int main() {
     EndDrawing();
   }
 
+  world.unload();
   CloseWindow();
   return 0;
 }

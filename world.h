@@ -3,6 +3,7 @@
 
 #include "camera.h"
 #include "player.h"
+#include "object.h"
 #include "raylib.h"
 #include <vector>
 
@@ -10,14 +11,17 @@ namespace potato_bucket {
 
 class World {
 private:
+  Texture2D backgnd;
 public:
   Player player;
   Camera2D camera;
+  std::vector<Object> objects;
 
-  World(float, float);
+  World();
 
   void update();
   void draw();
+  void unload();
 };
 
 } // namespace potato_bucket
