@@ -1,20 +1,25 @@
 #ifndef POTATO_BUCKET_WORLD_H
 #define POTATO_BUCKET_WORLD_H
 
-#include <vector>
-#include "raylib.h"
+#include "camera.h"
 #include "player.h"
+#include "raylib.h"
+#include <vector>
 
 namespace potato_bucket {
 
 class World {
 private:
-    Player player;
-
 public:
-  World(Player);
+  Player player;
+  Camera2D camera;
+
+  World(float, float);
+
+  void update();
+  void draw();
 };
 
-}
+} // namespace potato_bucket
 
 #endif
