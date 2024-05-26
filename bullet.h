@@ -1,26 +1,26 @@
-#ifndef POTATO_BUCKET_PLAYER_H
-#define POTATO_BUCKET_PLAYER_H
+#ifndef POTATO_BUCKET_BULLET_H
+#define POTATO_BUCKET_BULLET_H
 
 #include "anim.h"
 #include "raylib.h"
+#include <string>
 #include <vector>
 
 namespace potato_bucket {
 
-class Player {
+class Bullet {
 private:
-  Anim anim;
-
 public:
-  Vector2 scale;
   Rectangle box;
   Vector2 velocity;
 
-  Player(float, float, float, float);
+  Bullet(float, float, float, float, Vector2);
+  Bullet(Rectangle, Vector2);
 
   void update();
   void draw();
   void unload();
+
 };
 
 } // namespace potato_bucket

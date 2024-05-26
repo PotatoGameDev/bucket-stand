@@ -1,11 +1,13 @@
 #include "world.h"
 #include "object.h"
 #include "player.h"
+#include <cstdlib>
 #include <raylib.h>
+#include <iostream>
 
 namespace potato_bucket {
 
-World::World() : player{0.0, 0.0, 10.0, 10.0}, camera{0}, objects{} {
+World::World() : player{0.0, 0.0, 10.0, 10.0}, camera{0}, objects{}, bullets{} {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -16,6 +18,7 @@ World::World() : player{0.0, 0.0, 10.0, 10.0}, camera{0}, objects{} {
 
   objects.emplace_back(player.box, "tree.png");
 
+
   backgnd = LoadTexture("ass/sand.png");
 }
 
@@ -23,8 +26,29 @@ void World::update() {
   for (auto &o : objects) {
     o.update();
   }
+  std::cout << "1" << std::endl; 
+  for (auto &b : bullets) {
+    b.update();
+  }
+  std::cout << "2" << std::endl; 
   player.update();
+  std::cout << "3" << std::endl; 
   camera.target = Vector2{player.box.x, player.box.y};
+
+  std::cout << secondsSinceLastBullet << std::endl;
+
+  secondsSinceLastBullet += GetFrameTime();  
+  if (secondsSinceLastBullet > 3.0) {
+    secondsSinceLastBullet = 0.0;
+    // Shoot
+    std::cout << "Player scale: " << player.scale.x << " " << player.scale.y << std::endl;
+    Rectangle brec {player.box.x, player.box.y, 6.0f, 4.0f};
+    float signX = (player.scale.x < 0.0 ? -1.0 : 1.0);
+    float signY = (player.scale.y < 0.0 ? -1.0 : 1.0);
+    Vector2 bvel {signX * 1.0f + player.velocity.x, signY * 0.0f + player.velocity.y};
+    std::cout << "Bullet velocity: " << bvel.x << " " << bvel.y << std::endl;
+    bullets.emplace_back(brec, bvel);
+  }
 }
 
 void World::draw() {
@@ -46,6 +70,9 @@ void World::draw() {
   for (auto &o : objects) {
     o.draw();
   }
+  for (auto &b : bullets) {
+    b.draw();
+  }
 
   player.draw();
 }
@@ -54,6 +81,9 @@ void World::unload() {
   player.unload();
   for (auto &o : objects) {
     o.unload();
+  }
+  for (auto &b : bullets) {
+    b.unload();
   }
 }
 
