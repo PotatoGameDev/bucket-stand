@@ -18,7 +18,7 @@ private:
   std::vector<Bullet> bullets{};
   std::vector<Enemy> enemies{};
 
-  unsigned long frameNo{};
+  int frameNo{};
 
 public:
   Player player;

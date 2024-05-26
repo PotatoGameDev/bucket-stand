@@ -50,7 +50,7 @@ void Player::update(int frameNo, std::vector<Bullet>& bullets) {
     float signY = (scale.y < 0.0 ? -1.0 : 1.0);
     Vector2 bvel{signX * 1.0f + velocity.x,
                  signY * 0.0f + velocity.y};
-    bullets.emplace_back(brec, bvel);
+    bullets.emplace_back(brec, bvel, 5);
   }
 
   box.x += velocity.x;

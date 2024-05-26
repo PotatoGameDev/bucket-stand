@@ -15,7 +15,7 @@ private:
   int frames;
   Rectangle frameRect;
   Rectangle box;
-  Texture2D texture;
+  Texture2D& texture;
 
 
 public:

@@ -29,15 +29,22 @@ void World::update() {
   for (auto &o : objects) {
     o.update();
   }
-  for (auto &b : bullets) {
-    b.update();
+
+  for (auto it = bullets.begin(); it != bullets.end(); ) {
+    it->update();
+
+    if (it->dead()) {
+      it = bullets.erase(it);
+    } else {
+      it++;
+    }
   }
+
   for (auto &e : enemies) {
     e.update(player, frameNo, bullets);
   }
   player.update(frameNo, bullets);
   camera.target = Vector2{player.box.x, player.box.y};
-
 
   // Generate enemies
   if (frameNo % (5 * 60) == 0) {
@@ -46,13 +53,13 @@ void World::update() {
         ((rand() % (2 * 50 * precission)) / static_cast<float>(precission)) -
         50.0f;
 
-    Rectangle enemyBox{player.box.x + 100.0f, player.box.y + randY, 10.0f,
-                       10.0f};
+    Rectangle enemyBox{player.box.x + 100.0f, player.box.y + randY, 10.0f, 10.0f};
     enemies.emplace_back(enemyBox);
   }
 }
 
 void World::draw() {
+    
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -81,15 +88,13 @@ void World::draw() {
   }
 
   player.draw();
+
 }
 
 void World::unload() {
   player.unload();
   for (auto &o : objects) {
     o.unload();
-  }
-  for (auto &b : bullets) {
-    b.unload();
   }
   for (auto &e : enemies) {
     e.unload();
