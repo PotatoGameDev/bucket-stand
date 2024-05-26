@@ -1,6 +1,7 @@
 #ifndef POTATO_BUCKET_PLAYER_H
 #define POTATO_BUCKET_PLAYER_H
 
+#include "bullet.h"
 #include "anim.h"
 #include "raylib.h"
 #include <vector>
@@ -18,7 +19,7 @@ public:
 
   Player(float, float, float, float);
 
-  void update();
+  void update(int, std::vector<Bullet>&);
   void draw();
   void unload();
 };

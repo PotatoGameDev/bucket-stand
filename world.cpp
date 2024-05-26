@@ -2,12 +2,12 @@
 #include "object.h"
 #include "player.h"
 #include <cstdlib>
-#include <raylib.h>
 #include <iostream>
+#include <raylib.h>
 
 namespace potato_bucket {
 
-World::World() : player{0.0, 0.0, 10.0, 10.0}, camera{0}, objects{}, bullets{} {
+World::World(unsigned int worldSeed) : player{0.0, 0.0, 10.0, 10.0}, camera{0} {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -18,36 +18,37 @@ World::World() : player{0.0, 0.0, 10.0, 10.0}, camera{0}, objects{}, bullets{} {
 
   objects.emplace_back(player.box, "tree.png");
 
+  srand(worldSeed);
 
   backgnd = LoadTexture("ass/sand.png");
 }
 
 void World::update() {
+  frameNo++;
+
   for (auto &o : objects) {
     o.update();
   }
-  std::cout << "1" << std::endl; 
   for (auto &b : bullets) {
     b.update();
   }
-  std::cout << "2" << std::endl; 
-  player.update();
-  std::cout << "3" << std::endl; 
+  for (auto &e : enemies) {
+    e.update(player, frameNo, bullets);
+  }
+  player.update(frameNo, bullets);
   camera.target = Vector2{player.box.x, player.box.y};
 
-  std::cout << secondsSinceLastBullet << std::endl;
 
-  secondsSinceLastBullet += GetFrameTime();  
-  if (secondsSinceLastBullet > 3.0) {
-    secondsSinceLastBullet = 0.0;
-    // Shoot
-    std::cout << "Player scale: " << player.scale.x << " " << player.scale.y << std::endl;
-    Rectangle brec {player.box.x, player.box.y, 6.0f, 4.0f};
-    float signX = (player.scale.x < 0.0 ? -1.0 : 1.0);
-    float signY = (player.scale.y < 0.0 ? -1.0 : 1.0);
-    Vector2 bvel {signX * 1.0f + player.velocity.x, signY * 0.0f + player.velocity.y};
-    std::cout << "Bullet velocity: " << bvel.x << " " << bvel.y << std::endl;
-    bullets.emplace_back(brec, bvel);
+  // Generate enemies
+  if (frameNo % (5 * 60) == 0) {
+    int precission = 100;
+    float randY =
+        ((rand() % (2 * 50 * precission)) / static_cast<float>(precission)) -
+        50.0f;
+
+    Rectangle enemyBox{player.box.x + 100.0f, player.box.y + randY, 10.0f,
+                       10.0f};
+    enemies.emplace_back(enemyBox);
   }
 }
 
@@ -60,8 +61,10 @@ void World::draw() {
 
   for (int i = 0; i < xtiles; i++) {
     for (int j = 0; j < ytiles; j++) {
-      Vector2 pos = {static_cast<float>(i * backgnd.width) - (xtiles * (float)backgnd.width / 2),
-                     static_cast<float>(j * backgnd.height) - (ytiles * (float)backgnd.height / 2)};
+      Vector2 pos = {static_cast<float>(i * backgnd.width) -
+                         (xtiles * (float)backgnd.width / 2),
+                     static_cast<float>(j * backgnd.height) -
+                         (ytiles * (float)backgnd.height / 2)};
 
       DrawTextureV(backgnd, pos, WHITE);
     }
@@ -72,6 +75,9 @@ void World::draw() {
   }
   for (auto &b : bullets) {
     b.draw();
+  }
+  for (auto &e : enemies) {
+    e.draw();
   }
 
   player.draw();
@@ -84,6 +90,9 @@ void World::unload() {
   }
   for (auto &b : bullets) {
     b.unload();
+  }
+  for (auto &e : enemies) {
+    e.unload();
   }
 }
 

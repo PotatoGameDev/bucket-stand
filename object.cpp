@@ -13,7 +13,6 @@ void Object::update() {
 }
 
 void Object::draw() {
-  //DrawRectangleRec(box, GetColor(0xFFFFFFFF));
   anim.draw(Vector2{box.x, box.y});
 }
 

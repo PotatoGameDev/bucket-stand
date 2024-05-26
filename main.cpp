@@ -12,7 +12,7 @@ int main() {
 
   SetTargetFPS(60);
 
-  World world;
+  World world(0);
 
   while (!WindowShouldClose()) {
 
