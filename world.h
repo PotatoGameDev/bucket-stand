@@ -26,15 +26,16 @@ private:
 
   int frameNo{};
 
+  WorldSettings settings;
+
 public:
   Player player;
   Camera2D camera;
 
-  World(unsigned int);
+  World(unsigned int, WorldSettings = {});
 
   void update();
   void draw();
-  void unload();
 };
 
 } // namespace potato_bucket

@@ -24,7 +24,6 @@ public:
 
   void update();
   void draw(Vector2, Vector2 = {1.0, 1.0});
-  void unload();
 };
 
 } // namespace potato_bucket

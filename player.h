@@ -30,7 +30,6 @@ public:
 
   void update(int, std::vector<Bullet>&);
   void draw();
-  void unload();
 };
 
 } // namespace potato_bucket

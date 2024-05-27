@@ -19,7 +19,6 @@ public:
 
   void update();
   void draw();
-  void unload();
 };
 
 } // namespace potato_bucket

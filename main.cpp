@@ -1,6 +1,8 @@
 #include "player.h"
 #include "raylib.h"
+#include "screen.h"
 #include "world.h"
+#include <vector>
 
 using namespace potato_bucket;
 
@@ -12,25 +14,25 @@ int main() {
 
   SetTargetFPS(60);
 
-  World world(0);
+  std::vector<WorldScreen> screens { 
+    WorldScreen{}
+  };
+
+  int currentScreen = 0;
 
   while (!WindowShouldClose()) {
 
-    world.update();
+      screens[currentScreen].update();
 
     BeginDrawing();
     ClearBackground(BLACK);
-    BeginMode2D(world.camera);
 
-    world.draw();
-
-    EndMode2D();
+      screens[currentScreen].draw();
 
     DrawFPS(10, 10);
     EndDrawing();
   }
 
-  world.unload();
   CloseWindow();
   return 0;
 }

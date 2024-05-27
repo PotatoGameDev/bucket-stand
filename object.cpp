@@ -16,6 +16,4 @@ void Object::draw() {
   anim.draw(Vector2{box.x, box.y});
 }
 
-void Object::unload() { anim.unload(); }
-
 } // namespace potato_bucket

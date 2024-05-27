@@ -7,7 +7,7 @@
 
 namespace potato_bucket {
 
-World::World(unsigned int worldSeed) : player{0.0, 0.0, 10.0, 10.0, {1.0f, 60}}, camera{0} {
+World::World(unsigned int worldSeed, WorldSettings _settings) : player{0.0, 0.0, 10.0, 10.0, {1.0f, 60}}, camera{0}, settings {_settings} {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -59,7 +59,8 @@ void World::update() {
 }
 
 void World::draw() {
-    
+    BeginMode2D(camera);
+
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -89,16 +90,6 @@ void World::draw() {
 
   player.draw();
 
+  EndMode2D();
 }
-
-void World::unload() {
-  player.unload();
-  for (auto &o : objects) {
-    o.unload();
-  }
-  for (auto &e : enemies) {
-    e.unload();
-  }
-}
-
 } // namespace potato_bucket

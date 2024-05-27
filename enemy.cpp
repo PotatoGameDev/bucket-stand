@@ -46,5 +46,4 @@ void Enemy::update(Player player, int frameNo, std::vector<Bullet>& bullets) {
 }
 
 void Enemy::draw() { anim.draw(Vector2{box.x, box.y}, scale); }
-void Enemy::unload() { anim.unload(); }
 } // namespace potato_bucket

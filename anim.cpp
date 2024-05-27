@@ -15,8 +15,6 @@ Anim::Anim(std::string filename, int _frames, Rectangle r)
           std::cout << "Initialized anim with file: " << filename << std::endl;
 }
 
-void Anim::unload() {} 
-
 void Anim::update() {
   framesCounter++;
 

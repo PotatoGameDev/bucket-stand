@@ -14,22 +14,25 @@ Phase 3:
 - ~~Clean up bullets (after some time)~~
 
 Phase 4:
+- Level system.
+
+Phase 5:
 - Add score keeping
 - Add player life
 
-Phase 5:
+Phase 6:
 - Add death condition
 - Add win condition
 
-Phase 6:
+Phase 7:
 - Add final "last stand" place and sequence
 
-Phase 7:
+Phase 8:
 - Add summary screen with result and score
 
-Phase 8:
+Phase 9:
 - Add main menu
 
-Phase 9:
+Phase 10:
 - Add FUN
 - Have FUN

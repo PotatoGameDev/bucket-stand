@@ -68,5 +68,4 @@ void Player::update(int frameNo, std::vector<Bullet> &bullets) {
 }
 
 void Player::draw() { anim.draw(Vector2{box.x, box.y}, scale); }
-void Player::unload() { anim.unload(); }
 } // namespace potato_bucket
