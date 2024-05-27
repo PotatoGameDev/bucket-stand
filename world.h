@@ -7,9 +7,15 @@
 #include "object.h"
 #include "player.h"
 #include "raylib.h"
+#include <cwctype>
 #include <vector>
 
 namespace potato_bucket {
+
+
+struct WorldSettings {
+  
+};
 
 class World {
 private:

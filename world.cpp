@@ -7,7 +7,7 @@
 
 namespace potato_bucket {
 
-World::World(unsigned int worldSeed) : player{0.0, 0.0, 10.0, 10.0}, camera{0} {
+World::World(unsigned int worldSeed) : player{0.0, 0.0, 10.0, 10.0, {1.0f, 60}}, camera{0} {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -50,10 +50,10 @@ void World::update() {
   if (frameNo % (5 * 60) == 0) {
     int precission = 100;
     float randY =
-        ((rand() % (2 * 50 * precission)) / static_cast<float>(precission)) -
-        50.0f;
+        ((rand() % (2 * 200 * precission)) / static_cast<float>(precission)) -
+        200.0f;
 
-    Rectangle enemyBox{player.box.x + 100.0f, player.box.y + randY, 10.0f, 10.0f};
+    Rectangle enemyBox{player.box.x + 400.0f, player.box.y + randY, 10.0f, 10.0f};
     enemies.emplace_back(enemyBox);
   }
 }

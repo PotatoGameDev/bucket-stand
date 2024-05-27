@@ -11,18 +11,18 @@ Phase 2:
 Phase 3:
 - ~~Add animations to enemies and player~~
 - ~~Add texture cache~~
-- Clean up bullets (after some time)
+- ~~Clean up bullets (after some time)~~
 
 Phase 4:
 - Add score keeping
 - Add player life
 
 Phase 5:
-- Add final "last stand" place and sequence
-
-Phase 6:
 - Add death condition
 - Add win condition
+
+Phase 6:
+- Add final "last stand" place and sequence
 
 Phase 7:
 - Add summary screen with result and score

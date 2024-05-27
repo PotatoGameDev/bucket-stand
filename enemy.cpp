@@ -26,14 +26,20 @@ void Enemy::update(Player player, int frameNo, std::vector<Bullet>& bullets) {
   box.x += velocity.x;
   box.y += velocity.y;
 
+  if (!Vector2Equals(velocity, Vector2Zero())) {
+      lastNonZeroVelocity = velocity;
+  }
+
   // Generate bullets
   if (frameNo % (3 * 60) == 0) {
     Rectangle brec{box.x, box.y, 6.0f, 4.0f};
     float signX = (scale.x < 0.0 ? -1.0 : 1.0);
     float signY = (scale.y < 0.0 ? -1.0 : 1.0);
-    Vector2 bvel{signX * 1.0f + velocity.x,
-                 signY * 0.0f + velocity.y};
-    bullets.emplace_back(brec, bvel, 3);
+
+    float bulletSpeed = 1.0f;
+    Vector2 bvel = Vector2Add(
+        velocity, Vector2Scale(Vector2Normalize(lastNonZeroVelocity), bulletSpeed));
+    bullets.emplace_back(brec, bvel, 5);
   }
 
   anim.update();

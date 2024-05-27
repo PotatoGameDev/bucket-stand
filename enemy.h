@@ -12,6 +12,7 @@ class Enemy {
 private:
   Anim anim;
   float maxSpeed {1.0};
+  Vector2 lastNonZeroVelocity = Vector2{ 1.0, 0.0};
 
 public:
   Vector2 scale {1.0, 1.0};

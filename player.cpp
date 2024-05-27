@@ -1,14 +1,15 @@
 #include "player.h"
 #include "bullet.h"
 #include <raylib.h>
+#include <raymath.h>
 #include <vector>
 
 namespace potato_bucket {
-Player::Player(float x, float y, float w, float h)
+Player::Player(float x, float y, float w, float h, PlayerStats stats)
     : box{x, y, w, h}, anim("bucketman.png", 6, x, y, 48.0, 48.0),
-      scale{1.0, 1.0}, velocity{0.0, 0.0} {}
+      scale{1.0, 1.0}, velocity{0.0, 0.0}, currentStats{stats} {}
 
-void Player::update(int frameNo, std::vector<Bullet>& bullets) {
+void Player::update(int frameNo, std::vector<Bullet> &bullets) {
   velocity.x = 0.0;
   velocity.y = 0.0;
 
@@ -26,7 +27,7 @@ void Player::update(int frameNo, std::vector<Bullet>& bullets) {
     velocity.x = 1.0;
     scale = {1.0, 1.0};
   }
-  
+
   // VIM MODE
   if (IsKeyDown(KEY_J)) {
     velocity.y = 1.0;
@@ -43,13 +44,21 @@ void Player::update(int frameNo, std::vector<Bullet>& bullets) {
     scale = {1.0, 1.0};
   }
 
+  velocity = Vector2Scale(Vector2Normalize(velocity), currentStats.maxSpeed);
+
+  if (!Vector2Equals(velocity, Vector2Zero())) {
+      lastNonZeroVelocity = velocity;
+  }
+
   // Generate bullets
-  if (frameNo % (3 * 60) == 0) {
+  if (frameNo % (currentStats.shootEveryFrames) == 0) {
     Rectangle brec{box.x, box.y, 6.0f, 4.0f};
     float signX = (scale.x < 0.0 ? -1.0 : 1.0);
     float signY = (scale.y < 0.0 ? -1.0 : 1.0);
-    Vector2 bvel{signX * 1.0f + velocity.x,
-                 signY * 0.0f + velocity.y};
+
+    float bulletSpeed = 1.0f;
+    Vector2 bvel = Vector2Add(
+        velocity, Vector2Scale(Vector2Normalize(lastNonZeroVelocity), bulletSpeed));
     bullets.emplace_back(brec, bvel, 5);
   }
 
