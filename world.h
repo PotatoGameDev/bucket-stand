@@ -12,10 +12,9 @@
 
 namespace potato_bucket {
 
+enum class WorldFlow { None, Win, Lose };
 
-struct WorldSettings {
-  
-};
+struct WorldSettings {};
 
 class World {
 private:
@@ -34,7 +33,7 @@ public:
 
   World(unsigned int, WorldSettings = {});
 
-  void update();
+  WorldFlow update();
   void draw();
 };
 

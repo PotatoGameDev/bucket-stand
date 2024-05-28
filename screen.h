@@ -6,36 +6,52 @@
 
 namespace potato_bucket {
 
+struct WorldScreenSettings {};
 
-struct ScreenSettings {
+enum class ScreenFlow {
+
+  None,
+  FirstWorld,
+  NextWorld,
+  MainMenu,
+  Exit
 
 };
 
 class Screen {
 private:
-  
 public:
-  void update() = delete;
-  void draw() = delete;
+  ~Screen() = default;
+
+  virtual ScreenFlow update() = 0;
+  virtual void draw() = 0;
 };
 
-
-class WorldScreen : Screen {
+class WorldScreen : public Screen {
 private:
   World world;
 
 public:
-  WorldScreen(ScreenSettings = {});
-  void update();
+  WorldScreen(WorldScreenSettings = {});
+  ScreenFlow update();
   void draw();
 };
 
-class MenuScreen : Screen {
+struct MenuScreenSettings {
+  int mainTextSize = 25;
+  std::string mainText = "DEPRESS [ENTER] TO PLAY";
+  Color mainTextColor = WHITE;
+};
+
+class MenuScreen : public Screen {
 private:
+  MenuScreenSettings settings;
+  int mainTextWidth{};
 
 public:
-  void update();
-  void draw();
+  MenuScreen(MenuScreenSettings = {});
+  ScreenFlow update() override;
+  void draw() override;
 };
 
 } // namespace potato_bucket

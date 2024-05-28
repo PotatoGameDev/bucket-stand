@@ -23,7 +23,7 @@ World::World(unsigned int worldSeed, WorldSettings _settings) : player{0.0, 0.0,
   backgnd = LoadTexture("ass/sand.png");
 }
 
-void World::update() {
+WorldFlow World::update() {
   frameNo++;
 
   for (auto &o : objects) {
@@ -56,6 +56,8 @@ void World::update() {
     Rectangle enemyBox{player.box.x + 400.0f, player.box.y + randY, 10.0f, 10.0f};
     enemies.emplace_back(enemyBox);
   }
+
+  return WorldFlow::None;
 }
 
 void World::draw() {
