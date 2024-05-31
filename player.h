@@ -3,6 +3,7 @@
 
 #include "bullet.h"
 #include "anim.h"
+#include "camera.h"
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
@@ -28,8 +29,8 @@ public:
 
   Player(float, float, float, float, PlayerStats = {});
 
-  void update(int, std::vector<Bullet>&);
-  void draw();
+  void update(int, std::vector<Bullet>&, Camera2D);
+  void draw(Camera2D);
 };
 
 } // namespace potato_bucket

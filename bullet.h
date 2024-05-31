@@ -10,7 +10,8 @@ namespace potato_bucket {
 
 class Bullet {
 private:
-    int timeToLive {};
+  int timeToLive{};
+
 public:
   Rectangle box;
   Vector2 velocity;
@@ -21,7 +22,6 @@ public:
   void update();
   void draw();
   bool dead();
-
 };
 
 } // namespace potato_bucket

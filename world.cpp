@@ -7,7 +7,7 @@
 
 namespace potato_bucket {
 
-World::World(unsigned int worldSeed, WorldSettings _settings) : player{0.0, 0.0, 10.0, 10.0, {1.0f, 60}}, camera{0}, settings {_settings} {
+World::World(unsigned int worldSeed, WorldSettings _settings) : player{0.0, 0.0, 10.0, 10.0, {1.0f, 10}}, camera{0}, settings {_settings } {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -43,7 +43,7 @@ WorldFlow World::update() {
   for (auto &e : enemies) {
     e.update(player, frameNo, bullets);
   }
-  player.update(frameNo, bullets);
+  player.update(frameNo, bullets, camera);
   camera.target = Vector2{player.box.x, player.box.y};
 
   // Generate enemies
@@ -90,7 +90,7 @@ void World::draw() {
     e.draw();
   }
 
-  player.draw();
+  player.draw(camera);
 
   EndMode2D();
 }
