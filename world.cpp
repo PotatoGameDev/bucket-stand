@@ -9,6 +9,13 @@
 
 namespace potato_bucket {
 
+WorldSettings::WorldSettings(int winCondition, std::string location,
+                             std::string nextLocation)
+    : winCondition{winCondition}, location{location},
+      nextLocation{nextLocation} {}
+
+World::World() : camera{0}, settings{}, player{0.0, 0.0, {}} {}
+
 World::World(unsigned int worldSeed, WorldSettings settings)
     : player{0.0, 0.0, {100.f, 1.0f, 10}}, camera{0}, settings{settings} {
   float screenWidth = GetScreenWidth();
@@ -19,10 +26,9 @@ World::World(unsigned int worldSeed, WorldSettings settings)
   camera.rotation = 0.0f;
   camera.zoom = 1.0f;
 
-  objects.emplace_back(player.box.x, player.box.y, "tree.png");
-
   srand(worldSeed);
 
+  objects.emplace_back(player.box.x, player.box.y, "tree.png");
   backgnd = LoadTexture("ass/sand.png");
 }
 
@@ -58,7 +64,7 @@ WorldFlow World::update() {
       }
     } else {
       if (CheckCollisionRecs(bu->box, player.box)) {
-        player.currentLife-= 10;
+        player.currentLife -= 10;
         bu = bullets.erase(bu);
         continue;
       }
@@ -126,6 +132,14 @@ WorldFlow World::update() {
   return WorldFlow::None;
 }
 
+WorldResult World::result() {
+  if (player.currentScore >= settings.winCondition) {
+    return {player.currentScore, true, settings.location,
+            settings.nextLocation};
+  }
+  return {player.currentScore, false, settings.location, settings.nextLocation};
+}
+
 void World::draw() {
   BeginMode2D(camera);
 
@@ -163,7 +177,9 @@ void World::draw() {
   //=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
   // Draw GUI
 
-  std::string scoreText = "killed: " + std::to_string(player.currentScore) + " left: " + std::to_string(settings.winCondition - player.currentScore);
+  std::string scoreText =
+      "killed: " + std::to_string(player.currentScore) +
+      " left: " + std::to_string(settings.winCondition - player.currentScore);
   DrawText(scoreText.c_str(),
            GetScreenWidth() / 2 - MeasureText(scoreText.c_str(), 25) / 2, 10,
            25, WHITE);

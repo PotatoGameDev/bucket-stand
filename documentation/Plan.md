@@ -24,15 +24,29 @@ Phase 5:
 
 Phase 6:
 - ~~Add death condition~~
-- Add win condition
-- Fix seg fault when changing screens after win
+- ~~Add win condition~~
+- ~~Fix seg fault when changing screens after win~~
 
 Phase 7:
-- Add summary screen with result and score
+- ~~Add summary screen with result and score~~
 
 Phase 8:
 - ~~Add main menu~~
 
 Phase 9:
+- Add level boundaries
+- Make enemies appear from left and right
+
+Phase 10:
+- Add more enemies (kangaroos!!!! Giant spider!!!)
+- Add some bushes?
+- Add a hotel (?) in the last one
+
+Phase 12:
+- web assembly build
+- win buil
+- linux build
+
+Phase 12:
 - Add FUN
 - Have FUN

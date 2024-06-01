@@ -9,15 +9,17 @@ namespace potato_bucket {
 struct WorldScreenSettings {};
 
 enum class ScreenFlow {
-
   None,
   FirstWorld,
   NextWorld,
+  Repeat,
   MainMenu,
-  Exit
-
+  Exit,
+  Summary,
+  Introduction
 };
 
+// ======================================================================
 class Screen {
 private:
 public:
@@ -27,16 +29,20 @@ public:
   virtual void draw() = 0;
 };
 
+// ======================================================================
 class WorldScreen : public Screen {
 private:
-  World world;
+  World world{};
 
 public:
-  WorldScreen(WorldScreenSettings = {});
+  WorldScreen();
   ScreenFlow update();
   void draw();
+  WorldResult result();
+  void start(WorldSettings);
 };
 
+// ======================================================================
 struct MenuScreenSettings {
   int mainTextSize = 25;
   std::string mainText = "DEPRESS [ENTER] TO PLAY";
@@ -50,6 +56,16 @@ private:
 
 public:
   MenuScreen(MenuScreenSettings = {});
+  ScreenFlow update() override;
+  void draw() override;
+};
+
+// ======================================================================
+class SummaryScreen : public Screen {
+private:
+public:
+  WorldResult result{};
+  SummaryScreen();
   ScreenFlow update() override;
   void draw() override;
 };
