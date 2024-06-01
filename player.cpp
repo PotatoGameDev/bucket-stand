@@ -6,9 +6,13 @@
 #include <vector>
 
 namespace potato_bucket {
-Player::Player(float x, float y, float w, float h, PlayerStats stats)
-    : box{x, y, w, h}, anim("bucketman.png", 6, x, y, 48.0, 48.0),
-      scale{1.0, 1.0}, velocity{0.0, 0.0}, currentStats{stats} {}
+Player::Player(float x, float y, PlayerStats stats)
+    : box{x, y, 0.0, 0.0}, anim("bucketman.png", 8), scale{1.0, 1.0},
+      velocity{0.0, 0.0}, currentStats{stats} {
+  box.width = anim.width;
+  box.height = anim.height;
+  currentLife = currentStats.maxLife;
+}
 
 void Player::update(int frameNo, std::vector<Bullet> &bullets,
                     Camera2D camera) {
@@ -55,7 +59,8 @@ void Player::update(int frameNo, std::vector<Bullet> &bullets,
   // Generate bullets
   if (frameNo % (currentStats.shootEveryFrames) == 0) {
 
-    Rectangle bulletShape{box.x, box.y, 6.0f, 4.0f};
+    Rectangle bulletShape{box.x + box.width / 2, box.y + box.height / 2, 6.0f,
+                          4.0f};
 
     float signX = (scale.x < 0.0 ? -1.0 : 1.0);
     float signY = (scale.y < 0.0 ? -1.0 : 1.0);
@@ -68,7 +73,7 @@ void Player::update(int frameNo, std::vector<Bullet> &bullets,
     Vector2 bulletVelocity =
         Vector2Add(velocity, Vector2Scale(fromPlayerToMouse, bulletSpeed));
 
-    bullets.emplace_back(bulletShape, bulletVelocity, 5);
+    bullets.emplace_back(bulletShape, bulletVelocity, 5, true);
   }
 
   box.x += velocity.x;
@@ -76,5 +81,5 @@ void Player::update(int frameNo, std::vector<Bullet> &bullets,
   anim.update();
 }
 
-void Player::draw(Camera2D camera) { anim.draw(Vector2{box.x, box.y}, scale); }
+void Player::draw() { anim.draw(Vector2{box.x, box.y}, box, scale); }
 } // namespace potato_bucket

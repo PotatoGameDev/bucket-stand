@@ -12,17 +12,20 @@ class Enemy {
 private:
   Anim anim;
   float maxSpeed {1.0};
-  Vector2 lastNonZeroVelocity = Vector2{ 1.0, 0.0};
+  Vector2 lastNonZeroVelocity = {1.0, 0.0};
 
 public:
   Vector2 scale {1.0, 1.0};
   Rectangle box;
   Vector2 velocity {0.0, 0.0};
 
-  Enemy(float, float, float, float);
-  Enemy(Rectangle);
+  Enemy(Vector2);
+  Enemy(float, float);
+  
+  Enemy(Enemy&&) noexcept;
+  Enemy& operator=(Enemy&&) noexcept;
 
-  void update(Player, int, std::vector<Bullet>&);
+  void update(Player&, int, std::vector<Bullet>&);
   void draw();
 };
 

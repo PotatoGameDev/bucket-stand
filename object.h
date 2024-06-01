@@ -14,8 +14,8 @@ public:
   Rectangle box;
   Anim anim;
 
-  Object(float, float, float, float, std::string);
-  Object(Rectangle, std::string);
+  Object(float, float, std::string);
+  Object(Vector2, std::string);
 
   void update();
   void draw();

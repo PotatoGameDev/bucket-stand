@@ -4,10 +4,13 @@
 #include <cstdlib>
 #include <iostream>
 #include <raylib.h>
+#include <raymath.h>
+#include <string>
 
 namespace potato_bucket {
 
-World::World(unsigned int worldSeed, WorldSettings _settings) : player{0.0, 0.0, 10.0, 10.0, {1.0f, 10}}, camera{0}, settings {_settings } {
+World::World(unsigned int worldSeed, WorldSettings settings)
+    : player{0.0, 0.0, {100.f, 1.0f, 10}}, camera{0}, settings{settings} {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -16,7 +19,7 @@ World::World(unsigned int worldSeed, WorldSettings _settings) : player{0.0, 0.0,
   camera.rotation = 0.0f;
   camera.zoom = 1.0f;
 
-  objects.emplace_back(player.box, "tree.png");
+  objects.emplace_back(player.box.x, player.box.y, "tree.png");
 
   srand(worldSeed);
 
@@ -26,26 +29,78 @@ World::World(unsigned int worldSeed, WorldSettings _settings) : player{0.0, 0.0,
 WorldFlow World::update() {
   frameNo++;
 
+  for (auto bu = bullets.begin(); bu != bullets.end();) {
+    bu->update();
+
+    if (bu->dead()) {
+      bu = bullets.erase(bu);
+      continue;
+    }
+
+    if (bu->playerBullet) {
+      // This handles collisions bullet/enemy
+      bool hit = false;
+      // std::cout << "bullet / enemy col" << std::endl;
+      for (auto en = enemies.begin(); en != enemies.end();) {
+        if (CheckCollisionRecs(bu->box, en->box)) {
+          // enemy killed
+          en = enemies.erase(en);
+          hit = true;
+          player.currentScore++;
+          break;
+        }
+
+        en++;
+      }
+      if (hit) {
+        bu = bullets.erase(bu);
+        continue;
+      }
+    } else {
+      if (CheckCollisionRecs(bu->box, player.box)) {
+        player.currentLife-= 10;
+        bu = bullets.erase(bu);
+        continue;
+      }
+    }
+
+    // This handles collisions bullet/bullet
+    // std::cout << "bullet / bullet col" << std::endl;
+    for (auto ob = bullets.begin(); ob != bullets.end();) {
+      if (bu == ob) {
+        ob++;
+        continue;
+      }
+      if (CheckCollisionRecs(bu->box, ob->box)) {
+        Vector2 obVel = ob->velocity;
+        Vector2 buVel = bu->velocity;
+        bu->bounce(obVel);
+        ob->bounce(buVel);
+      }
+
+      ob++;
+    }
+
+    bu++;
+  }
+
+  std::cout << "updating objects" << std::endl;
   for (auto &o : objects) {
     o.update();
   }
 
-  for (auto it = bullets.begin(); it != bullets.end(); ) {
-    it->update();
-
-    if (it->dead()) {
-      it = bullets.erase(it);
-    } else {
-      it++;
-    }
-  }
-
+  std::cout << "updating enemies" << std::endl;
   for (auto &e : enemies) {
+    std::cout << "before update enemies" << std::endl;
     e.update(player, frameNo, bullets);
+    std::cout << "after update enemies" << std::endl;
   }
+
+  std::cout << "updating player" << std::endl;
   player.update(frameNo, bullets, camera);
   camera.target = Vector2{player.box.x, player.box.y};
 
+  std::cout << "gening ens" << std::endl;
   // Generate enemies
   if (frameNo % (5 * 60) == 0) {
     int precission = 100;
@@ -53,15 +108,26 @@ WorldFlow World::update() {
         ((rand() % (2 * 200 * precission)) / static_cast<float>(precission)) -
         200.0f;
 
-    Rectangle enemyBox{player.box.x + 400.0f, player.box.y + randY, 10.0f, 10.0f};
+    Vector2 enemyBox{player.box.x + 400.0f, player.box.y + randY};
+    std::cout << "enem gening" << std::endl;
     enemies.emplace_back(enemyBox);
+    std::cout << "enem gened" << std::endl;
+  }
+
+  std::cout << "up end" << std::endl;
+
+  if (player.currentScore >= settings.winCondition) {
+    return WorldFlow::Win;
+  }
+  if (player.currentLife <= 0.0f) {
+    return WorldFlow::Lose;
   }
 
   return WorldFlow::None;
 }
 
 void World::draw() {
-    BeginMode2D(camera);
+  BeginMode2D(camera);
 
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
@@ -90,8 +156,22 @@ void World::draw() {
     e.draw();
   }
 
-  player.draw(camera);
+  player.draw();
 
   EndMode2D();
+
+  //=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+  // Draw GUI
+
+  std::string scoreText = "killed: " + std::to_string(player.currentScore) + " left: " + std::to_string(settings.winCondition - player.currentScore);
+  DrawText(scoreText.c_str(),
+           GetScreenWidth() / 2 - MeasureText(scoreText.c_str(), 25) / 2, 10,
+           25, WHITE);
+
+  Color lifeColor = player.currentLife > 30 ? GREEN : RED;
+
+  DrawRectangleRec({GetScreenWidth() / 2 - player.currentLife / 2, 40,
+                    player.currentLife, 10},
+                   lifeColor);
 }
 } // namespace potato_bucket

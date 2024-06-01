@@ -14,7 +14,9 @@ namespace potato_bucket {
 
 enum class WorldFlow { None, Win, Lose };
 
-struct WorldSettings {};
+struct WorldSettings {
+    int winCondition{1};
+};
 
 class World {
 private:

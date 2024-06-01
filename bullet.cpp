@@ -2,13 +2,15 @@
 #include <raylib.h>
 
 #include <iostream>
+#include <raymath.h>
 
 namespace potato_bucket {
 Bullet::Bullet(float x, float y, float w, float h, Vector2 _velocity,
-               int maxLife)
+               int maxLife, bool playerBullet)
     : Bullet(Rectangle{x, y, w, h}, _velocity, maxLife) {}
-Bullet::Bullet(Rectangle r, Vector2 _velocity, int maxLife)
-    : box{r}, velocity{_velocity}, timeToLive{maxLife * 60} {}
+
+Bullet::Bullet(Rectangle r, Vector2 _velocity, int maxLife, bool playerBullet)
+    : box{r}, velocity{_velocity}, timeToLive{maxLife * 60}, playerBullet{playerBullet} {}
 
 void Bullet::update() {
   box.x += velocity.x;
@@ -16,11 +18,14 @@ void Bullet::update() {
   timeToLive--;
 }
 
-void Bullet::draw() {
+void Bullet::draw() const {
   DrawRectangleV(Vector2{box.x, box.y}, Vector2{box.width, box.height}, WHITE);
-  // DrawText(std::to_string(timeToLive/60).c_str(), box.x, box.y, 10, WHITE);
 }
 
-bool Bullet::dead() { return timeToLive <= 0; }
+bool Bullet::dead() const { return timeToLive <= 0; }
+
+void Bullet::bounce(Vector2 otherVelocity) {
+  velocity = Vector2Add(otherVelocity, Vector2Invert(velocity));
+}
 
 } // namespace potato_bucket

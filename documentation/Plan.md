@@ -17,27 +17,22 @@ Phase 4:
 - ~~Level system.~~
 
 Phase 5:
-- Add enemy life/death
-- Add player life/death
-- Add score keeping
-- Add player life
+- ~~Add enemy life/death~~
+- ~~Add player life/death~~
+- ~~Add score keeping~~
+- ~~Add player life~~
 
 Phase 6:
-- Add death condition
+- ~~Add death condition~~
 - Add win condition
+- Fix seg fault when changing screens after win
 
 Phase 7:
-- Add final "last stand" place and sequence
-
-Phase 8:
-- Add some levels...
-
-Phase 9:
 - Add summary screen with result and score
 
-Phase 10:
-- Add main menu
+Phase 8:
+- ~~Add main menu~~
 
-Phase 11:
+Phase 9:
 - Add FUN
 - Have FUN

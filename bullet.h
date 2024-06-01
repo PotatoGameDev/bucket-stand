@@ -15,13 +15,16 @@ private:
 public:
   Rectangle box;
   Vector2 velocity;
+  bool playerBullet{false};
 
-  Bullet(float, float, float, float, Vector2, int = 1);
-  Bullet(Rectangle, Vector2, int = 1);
+  Bullet(float, float, float, float, Vector2, int = 1, bool = false);
+  Bullet(Rectangle, Vector2, int = 1, bool = false);
 
   void update();
-  void draw();
-  bool dead();
+  void draw() const;
+  bool dead() const;
+
+  void bounce(Vector2);
 };
 
 } // namespace potato_bucket

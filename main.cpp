@@ -35,6 +35,10 @@ int main() {
             break;
         case ScreenFlow::NextWorld:
             currentWorldIndex++;
+            if (currentWorldIndex == screens.size()) {
+              currentScreen = mainMenuScreen.get();
+              break;
+            }
             currentScreen = screens[currentWorldIndex].get();
             break;
         case ScreenFlow::MainMenu:
@@ -49,7 +53,7 @@ int main() {
 
     currentScreen->draw();
 
-    DrawFPS(10, 10);
+    DrawFPS(GetScreenWidth() - 30, 10);
     EndDrawing();
   }
 

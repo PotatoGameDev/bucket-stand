@@ -1,19 +1,21 @@
 #include "object.h"
 #include "anim.h"
-#include <raylib.h>
 #include <iostream>
+#include <raylib.h>
 #include <string>
 
 namespace potato_bucket {
-Object::Object(float x, float y, float w, float h, std::string animFilename) : Object(Rectangle{x, y, w, h}, animFilename) {}
-Object::Object(Rectangle r, std::string animFilename) : box{r}, anim(animFilename, 1, r.x, r.y, 256.0, 256.0) {}
+Object::Object(float x, float y, std::string animFilename)
+    : Object({x, y}, animFilename) {}
+Object::Object(Vector2 pos, std::string animFilename)
+    : box{pos.x, pos.y, 0.0f, 0.0f}, anim(animFilename, 1) {
 
-void Object::update() {
-    anim.update();
+  box.width = anim.width;
+  box.height = anim.height;
 }
 
-void Object::draw() {
-  anim.draw(Vector2{box.x, box.y});
-}
+void Object::update() { anim.update(); }
+
+void Object::draw() { anim.draw(Vector2{box.x, box.y}, box); }
 
 } // namespace potato_bucket

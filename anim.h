@@ -14,16 +14,21 @@ private:
   int framesSpeed = 8;
   int frames;
   Rectangle frameRect;
-  Rectangle box;
-  Texture2D& texture;
-
+  Texture2D &texture;
 
 public:
-  Anim(std::string, int, float, float, float, float);
-  Anim(std::string, int, Rectangle);
+
+  int width {};
+  int height {};
+
+  Anim(std::string, int);
+
+  ~Anim() = default;
+  Anim(Anim &&) noexcept;
+  Anim &operator=(Anim &&) noexcept;
 
   void update();
-  void draw(Vector2, Vector2 = {1.0, 1.0});
+  void draw(Vector2, Rectangle, Vector2 = {1.0, 1.0});
 };
 
 } // namespace potato_bucket
