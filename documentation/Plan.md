@@ -37,16 +37,20 @@ Phase 9:
 - Add level boundaries
 - Make enemies appear from left and right
 
-Phase 10:
+Phase 11:
+- Add sounds
+- Add some music
+
+Phase 12:
 - Add more enemies (kangaroos!!!! Giant spider!!!)
 - Add some bushes?
 - Add a hotel (?) in the last one
 
-Phase 12:
+Phase 13:
 - web assembly build
 - win buil
 - linux build
 
-Phase 12:
+Phase 14:
 - Add FUN
 - Have FUN
