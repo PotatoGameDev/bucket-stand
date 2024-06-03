@@ -31,7 +31,7 @@ public:
 
   Player(float, float, PlayerStats = {});
 
-  void update(int, std::vector<Bullet> &, Camera2D);
+  Vector2 update(int, std::vector<Bullet> &, Camera2D);
   void draw();
 };
 

@@ -53,6 +53,9 @@ public:
   WorldResult result();
 };
 
+void PrintRectum(const Rectangle&);
+void PrintVectorum(const Vector2&);
+
 } // namespace potato_bucket
 
 #endif

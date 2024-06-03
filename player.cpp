@@ -14,7 +14,7 @@ Player::Player(float x, float y, PlayerStats stats)
   currentLife = currentStats.maxLife;
 }
 
-void Player::update(int frameNo, std::vector<Bullet> &bullets,
+Vector2 Player::update(int frameNo, std::vector<Bullet> &bullets,
                     Camera2D camera) {
   velocity.x = 0.0;
   velocity.y = 0.0;
@@ -75,10 +75,10 @@ void Player::update(int frameNo, std::vector<Bullet> &bullets,
 
     bullets.emplace_back(bulletShape, bulletVelocity, 5, true);
   }
-
-  box.x += velocity.x;
-  box.y += velocity.y;
+  
   anim.update();
+
+  return velocity;
 }
 
 void Player::draw() { anim.draw(Vector2{box.x, box.y}, box, scale); }

@@ -103,7 +103,22 @@ WorldFlow World::update() {
   }
 
   std::cout << "updating player" << std::endl;
-  player.update(frameNo, bullets, camera);
+  Vector2 playerVelocity = player.update(frameNo, bullets, camera);
+  
+  Rectangle playerNewBox = player.box;
+  playerNewBox.x += playerVelocity.x;
+  playerNewBox.y += playerVelocity.y;
+
+  if (playerNewBox.x > GetScreenWidth() / 2 || playerNewBox.x < -GetScreenWidth() / 2) {
+      playerNewBox.x = player.box.x;
+  }
+  if (playerNewBox.y > GetScreenHeight() / 2 || playerNewBox.y < -GetScreenHeight() / 2) {
+      playerNewBox.y = player.box.y;
+  }
+
+  player.velocity = playerVelocity;
+  player.box = playerNewBox;
+
   camera.target = Vector2{player.box.x, player.box.y};
 
   std::cout << "gening ens" << std::endl;
@@ -130,6 +145,16 @@ WorldFlow World::update() {
   }
 
   return WorldFlow::None;
+}
+
+void PrintRectum(const Rectangle& rect) {
+    std::cout << "Rectangle(" << rect.x << ", " << rect.y << ", " 
+              << rect.width << ", " << rect.height << ")" << std::endl;
+}
+
+
+void PrintVectorum(const Vector2& vect) {
+    std::cout << "Rectangle(" << vect.x << ", " << vect.y << ")" << std::endl;
 }
 
 WorldResult World::result() {

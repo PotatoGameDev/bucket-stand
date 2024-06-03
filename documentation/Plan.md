@@ -48,7 +48,7 @@ Phase 12:
 
 Phase 13:
 - web assembly build
-- win buil
+- win build
 - linux build
 
 Phase 14:
