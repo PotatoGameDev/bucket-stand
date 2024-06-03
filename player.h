@@ -20,6 +20,7 @@ class Player {
 private:
   Anim anim;
   Vector2 lastNonZeroVelocity = Vector2{1.0, 0.0};
+  int lastShotFrame{};
 
 public:
   Vector2 scale;

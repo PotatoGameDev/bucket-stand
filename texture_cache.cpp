@@ -21,5 +21,9 @@ Texture2D &TextureCache::load(std::string path) {
   return inserted.first->second;
 }
 
-void TextureCache::unload() {}
+void TextureCache::unload() {
+    for (auto pair : cache) {
+      UnloadTexture(pair.second);
+    }
+}
 } // namespace potato_bucket

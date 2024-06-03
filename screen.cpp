@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "matildas.h"
 #include "world.h"
 #include <cstdlib>
 #include <raylib.h>
@@ -31,7 +32,11 @@ ScreenFlow WorldScreen::update() {
 
 WorldResult WorldScreen::result() { return world.result(); }
 
-void WorldScreen::start(WorldSettings settings) { world = {0, settings}; }
+void WorldScreen::start(WorldSettings settings) { 
+    world = {0, settings};
+
+    Matildas::Instance().giveMeNextOne();
+}
 
 void WorldScreen::draw() { world.draw(); }
 

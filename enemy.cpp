@@ -1,4 +1,5 @@
 #include "enemy.h"
+#include "audio_manager.h"
 #include "raymath.h"
 #include <iostream>
 #include <raylib.h>
@@ -63,6 +64,7 @@ void Enemy::update(Player &player, int frameNo, std::vector<Bullet> &bullets) {
         Vector2Add(velocity, Vector2Scale(Vector2Normalize(lastNonZeroVelocity),
                                           bulletSpeed));
     bullets.emplace_back(brec, bvel, 5);
+    AudioMan::Instance().play("shoot.wav", playerPos, enemyPos);
   }
 
   anim.update();

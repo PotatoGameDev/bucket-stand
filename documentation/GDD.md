@@ -19,3 +19,9 @@ This is not going to be intuitive to play...
 ## Assets
 https://foozlecc.itch.io/lucifer-sorceress
 https://foozlecc.itch.io/lucifer-warrior
+
+https://commons.wikimedia.org/wiki/File:Waltzing_Matilda.ogg
+CambridgeBayWeather, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons
+
+https://commons.wikimedia.org/wiki/File:Waltzing-Matilda-_Christina-Macpherson_-Wikipedia.ogg
+BDW82, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons

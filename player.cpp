@@ -1,4 +1,5 @@
 #include "player.h"
+#include "audio_manager.h"
 #include "bullet.h"
 #include "camera.h"
 #include <raylib.h>
@@ -57,23 +58,22 @@ Vector2 Player::update(int frameNo, std::vector<Bullet> &bullets,
   }
 
   // Generate bullets
-  if (frameNo % (currentStats.shootEveryFrames) == 0) {
-
+  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && (frameNo - lastShotFrame >= currentStats.shootEveryFrames)) {
     Rectangle bulletShape{box.x + box.width / 2, box.y + box.height / 2, 6.0f,
                           4.0f};
-
     float signX = (scale.x < 0.0 ? -1.0 : 1.0);
     float signY = (scale.y < 0.0 ? -1.0 : 1.0);
-
     float bulletSpeed = 2.0f;
-
     Vector2 worldMousePosition = GetScreenToWorld2D(GetMousePosition(), camera);
     Vector2 fromPlayerToMouse =
         Vector2Normalize(Vector2Subtract(worldMousePosition, {box.x, box.y}));
     Vector2 bulletVelocity =
         Vector2Add(velocity, Vector2Scale(fromPlayerToMouse, bulletSpeed));
-
     bullets.emplace_back(bulletShape, bulletVelocity, 5, true);
+
+    lastShotFrame = frameNo;
+
+    AudioMan::Instance().play("shoot.wav");
   }
   
   anim.update();

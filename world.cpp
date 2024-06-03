@@ -17,7 +17,7 @@ WorldSettings::WorldSettings(int winCondition, std::string location,
 World::World() : camera{0}, settings{}, player{0.0, 0.0, {}} {}
 
 World::World(unsigned int worldSeed, WorldSettings settings)
-    : player{0.0, 0.0, {100.f, 1.0f, 10}}, camera{0}, settings{settings} {
+    : player{0.0, 0.0, {100.f, 1.0f, 60}}, camera{0}, settings{settings} {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -125,11 +125,17 @@ WorldFlow World::update() {
   // Generate enemies
   if (frameNo % (5 * 60) == 0) {
     int precission = 100;
-    float randY =
-        ((rand() % (2 * 200 * precission)) / static_cast<float>(precission)) -
-        200.0f;
 
-    Vector2 enemyBox{player.box.x + 400.0f, player.box.y + randY};
+    float randXMultiplier = rand() % 2;
+    if (randXMultiplier == 0) {
+      randXMultiplier = -1;
+    }
+    
+    float randX = GetScreenWidth() * randXMultiplier + 50;
+    float randY = rand() % 2*GetScreenHeight() - GetScreenHeight();
+
+    Vector2 enemyBox{randX, randY};
+
     std::cout << "enem gening" << std::endl;
     enemies.emplace_back(enemyBox);
     std::cout << "enem gened" << std::endl;

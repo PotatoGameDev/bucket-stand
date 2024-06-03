@@ -1,5 +1,8 @@
+#include "audio_manager.h"
+#include "matildas.h"
 #include "raylib.h"
 #include "screen.h"
+#include "texture_cache.h"
 #include "world.h"
 #include <iterator>
 #include <memory>
@@ -14,6 +17,8 @@ int main() {
   InitWindow(screenWidth, screenHeight, "BucketStand");
   SetTargetFPS(60);
   SetExitKey(0);
+
+  InitAudioDevice();
 
   std::vector<WorldSettings> levels;
 
@@ -30,6 +35,8 @@ int main() {
 
   Screen *currentScreen = mainMenuScreen.get();
   int currentLevel = 0;
+
+  Matildas::Instance().giveMeNextOne();
 
   while (!WindowShouldClose()) {
     ScreenFlow GOTO = currentScreen->update();
@@ -72,6 +79,8 @@ int main() {
       break;
     }
 
+    Matildas::Instance().update();
+
     BeginDrawing();
     ClearBackground(BLACK);
 
@@ -80,7 +89,13 @@ int main() {
     DrawFPS(GetScreenWidth() - 30, 10);
     EndDrawing();
   }
+  
+  // TODO: Handle in destructors instead:
+  AudioMan::Instance().unload();
+  TextureCache::Instance().unload();
+  Matildas::Instance().unload();
 
+  CloseAudioDevice();
   CloseWindow();
   return 0;
 }
