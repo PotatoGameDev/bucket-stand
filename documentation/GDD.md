@@ -25,3 +25,9 @@ CambridgeBayWeather, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.
 
 https://commons.wikimedia.org/wiki/File:Waltzing-Matilda-_Christina-Macpherson_-Wikipedia.ogg
 BDW82, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons
+
+
+https://opengameart.org/content/giant-spider-32x32
+Spider made by Tuomo Untinen
+
+Hansjörg Malthaner, and link here: http://opengameart.org/users/varkalandar

@@ -29,6 +29,20 @@ World::World(unsigned int worldSeed, WorldSettings settings)
   srand(worldSeed);
 
   objects.emplace_back(player.box.x, player.box.y, "tree.png");
+
+  for (int i{-GetScreenWidth()-50}; i < GetScreenWidth()+50; i += 20) {
+    int bushNo = rand() % 3;
+    objects.emplace_back(i, GetScreenHeight(), "bush" + std::to_string(bushNo) +  ".png");
+    bushNo = rand() % 3;
+    objects.emplace_back(i, -GetScreenHeight(), "bush" + std::to_string(bushNo) +  ".png");
+  }
+  for (int i{-GetScreenHeight()-50}; i < GetScreenHeight()+50; i += 20) {
+    int bushNo = rand() % 3;
+    objects.emplace_back(GetScreenWidth(), i, "bush" + std::to_string(bushNo) +  ".png");
+    bushNo = rand() % 3;
+    objects.emplace_back(-GetScreenWidth(), i, "bush" + std::to_string(bushNo) +  ".png");
+  }
+
   backgnd = LoadTexture("ass/sand.png");
 }
 
@@ -104,16 +118,18 @@ WorldFlow World::update() {
 
   std::cout << "updating player" << std::endl;
   Vector2 playerVelocity = player.update(frameNo, bullets, camera);
-  
+
   Rectangle playerNewBox = player.box;
   playerNewBox.x += playerVelocity.x;
   playerNewBox.y += playerVelocity.y;
 
-  if (playerNewBox.x > GetScreenWidth() / 2 || playerNewBox.x < -GetScreenWidth() / 2) {
-      playerNewBox.x = player.box.x;
+  if (playerNewBox.x > GetScreenWidth() ||
+      playerNewBox.x < -GetScreenWidth()) {
+    playerNewBox.x = player.box.x;
   }
-  if (playerNewBox.y > GetScreenHeight() / 2 || playerNewBox.y < -GetScreenHeight() / 2) {
-      playerNewBox.y = player.box.y;
+  if (playerNewBox.y > GetScreenHeight() ||
+      playerNewBox.y < -GetScreenHeight()) {
+    playerNewBox.y = player.box.y;
   }
 
   player.velocity = playerVelocity;
@@ -130,9 +146,9 @@ WorldFlow World::update() {
     if (randXMultiplier == 0) {
       randXMultiplier = -1;
     }
-    
+
     float randX = GetScreenWidth() * randXMultiplier + 50;
-    float randY = rand() % 2*GetScreenHeight() - GetScreenHeight();
+    float randY = rand() % 2 * GetScreenHeight() - GetScreenHeight();
 
     Vector2 enemyBox{randX, randY};
 
@@ -153,14 +169,13 @@ WorldFlow World::update() {
   return WorldFlow::None;
 }
 
-void PrintRectum(const Rectangle& rect) {
-    std::cout << "Rectangle(" << rect.x << ", " << rect.y << ", " 
-              << rect.width << ", " << rect.height << ")" << std::endl;
+void PrintRectum(const Rectangle &rect) {
+  std::cout << "Rectangle(" << rect.x << ", " << rect.y << ", " << rect.width
+            << ", " << rect.height << ")" << std::endl;
 }
 
-
-void PrintVectorum(const Vector2& vect) {
-    std::cout << "Rectangle(" << vect.x << ", " << vect.y << ")" << std::endl;
+void PrintVectorum(const Vector2 &vect) {
+  std::cout << "Rectangle(" << vect.x << ", " << vect.y << ")" << std::endl;
 }
 
 WorldResult World::result() {
