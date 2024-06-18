@@ -60,11 +60,9 @@ WorldFlow World::update() {
 
     if (bu->dead()) {
       bu = bullets.erase(bu);
-    TextureCache::Instance().print("bullet erased");
       continue;
     }
 
-    TextureCache::Instance().print("before bullets check");
     if (bu->playerBullet) {
       // This handles collisions bullet/enemy
       bool hit = false;
@@ -72,9 +70,7 @@ WorldFlow World::update() {
       for (auto en = enemies.begin(); en != enemies.end();) {
         if (CheckCollisionRecs(bu->box, en->box)) {
           // enemy killed
-          TextureCache::Instance().print("before enemy erase");
           en = enemies.erase(en);
-          TextureCache::Instance().print("after enemy erase");
           hit = true;
           player.currentScore++;
           break;
@@ -84,14 +80,12 @@ WorldFlow World::update() {
       }
       if (hit) {
         bu = bullets.erase(bu);
-    TextureCache::Instance().print("bullet erased enemy");
         continue;
       }
     } else {
       if (CheckCollisionRecs(bu->box, player.box)) {
         player.currentLife -= 10;
         bu = bullets.erase(bu);
-    TextureCache::Instance().print("bullet erased player");
         continue;
       }
     }
@@ -108,6 +102,11 @@ WorldFlow World::update() {
         Vector2 buVel = bu->velocity;
         bu->bounce(obVel);
         ob->bounce(buVel);
+
+        if (bu->playerBullet || ob->playerBullet) {
+          bu->playerBullet = true;
+          ob->playerBullet = true;
+        }
       }
 
       ob++;
@@ -116,13 +115,11 @@ WorldFlow World::update() {
     bu++;
   }
 
-    TextureCache::Instance().print("after collisions");
   std::cout << "updating objects" << std::endl;
   for (auto &o : objects) {
     o.update();
   }
 
-    TextureCache::Instance().print("after updating");
   std::cout << "updating enemies" << std::endl;
   for (auto &e : enemies) {
     std::cout << "before update enemies" << std::endl;
@@ -130,10 +127,8 @@ WorldFlow World::update() {
     std::cout << "after update enemies" << std::endl;
   }
 
-    TextureCache::Instance().print("after updating enemies");
   std::cout << "updating player" << std::endl;
   Vector2 playerVelocity = player.update(frameNo, bullets, camera);
-    TextureCache::Instance().print("after updating player");
 
   Rectangle playerNewBox = player.box;
   playerNewBox.x += playerVelocity.x;
@@ -155,7 +150,6 @@ WorldFlow World::update() {
   std::cout << "gening ens" << std::endl;
   // Generate enemies
 
-    TextureCache::Instance().print("before gening");
   if (frameNo % (5 * 60) == 0) {
     int precission = 100;
 
@@ -171,13 +165,7 @@ WorldFlow World::update() {
 
     int enemType = rand() % 2;
 
-    std::cout << "============================================" << std::endl;
-    std::cout << "============================================" << std::endl;
-    std::cout << "============================================" << std::endl;
     std::cout << "enem gening " << enemType << std::endl;
-    std::cout << "============================================" << std::endl;
-    std::cout << "============================================" << std::endl;
-    std::cout << "============================================" << std::endl;
 
     if (enemType == 0) {
       enemies.emplace_back(enemyBox, Anim{"enemy.png", 6});
@@ -189,7 +177,6 @@ WorldFlow World::update() {
   }
 
   std::cout << "up end" << std::endl;
-    TextureCache::Instance().print("after gening");
 
   if (player.currentScore >= settings.winCondition) {
     return WorldFlow::Win;
