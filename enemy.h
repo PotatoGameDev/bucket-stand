@@ -19,8 +19,8 @@ public:
   Rectangle box;
   Vector2 velocity {0.0, 0.0};
 
-  Enemy(Vector2);
-  Enemy(float, float);
+  Enemy(Vector2, Anim);
+  Enemy(float, float, Anim);
   
   Enemy(Enemy&&) noexcept;
   Enemy& operator=(Enemy&&) noexcept;

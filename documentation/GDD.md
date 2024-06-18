@@ -30,4 +30,6 @@ BDW82, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikime
 https://opengameart.org/content/giant-spider-32x32
 Spider made by Tuomo Untinen
 
+hjm-bushes_02-alpha.png
+https://opengameart.org/content/100-isometric-bushes
 Hansjörg Malthaner, and link here: http://opengameart.org/users/varkalandar

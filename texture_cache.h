@@ -5,12 +5,13 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace potato_bucket {
 
 class TextureCache {
 private:
-  std::map<std::string, Texture2D> cache{};
+  std::map<std::string, std::shared_ptr<Texture2D>> cache{};
 
   TextureCache();
   ~TextureCache();
@@ -24,8 +25,9 @@ public:
     return instance;
   }
 
-  Texture2D &load(std::string);
+  std::shared_ptr<Texture2D> load(std::string);
   void unload();
+  void print(std::string = "");
 };
 
 } // namespace potato_bucket

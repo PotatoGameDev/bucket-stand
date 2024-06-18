@@ -53,7 +53,7 @@ ScreenFlow MenuScreen::update() {
   }
 
   if (IsKeyPressed(KEY_ESCAPE)) {
-    return ScreenFlow::Exit;
+    return ScreenFlow::Credits;
   }
 
   return ScreenFlow::None;
@@ -80,7 +80,7 @@ ScreenFlow SummaryScreen::update() {
   }
 
   if (IsKeyPressed(KEY_ESCAPE)) {
-    return ScreenFlow::Exit;
+    return ScreenFlow::MainMenu;
   }
 
   return ScreenFlow::None;
@@ -199,4 +199,86 @@ void SummaryScreen::draw() {
   DrawText(text4.c_str(), (GetScreenWidth() - text4Width) / 2,
            vert + line++ * GetScreenHeight() / lines, text4Size, WHITE);
 }
+
+// ======================================================================
+//                              CreditsScreen
+// ======================================================================
+ScreenFlow CreditsScreen::update() {
+  if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE) || framesLeft <= 0) {
+    return ScreenFlow::Exit;
+  }
+  framesLeft--;
+
+  return ScreenFlow::None;
+}
+
+CreditsScreen::CreditsScreen() {
+  credits.emplace_back("https://commons.wikimedia.org/wiki/File:Waltzing_Matilda.ogg", "CambridgeBayWeather, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons");
+  credits.emplace_back("https://commons.wikimedia.org/wiki/File:Waltzing-Matilda-_Christina-Macpherson_-Wikipedia.ogg", "BDW82, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons");
+  credits.emplace_back("https://opengameart.org/content/giant-spider-32x32", "Spider made by Tuomo Untinen");
+  credits.emplace_back("https://opengameart.org/content/100-isometric-bushes", "Hansjörg Malthaner, and link here: http://opengameart.org/users/varkalandar");
+}
+
+Credit::Credit(std::string file, std::string author) : file{file}, author{author} {
+
+}
+
+
+void CreditsScreen::draw() {
+  int line{};
+  int lines = credits.size()*2 + 5;
+
+  std::string text1{};
+  int text1Size = 26;
+  float text1Width = 0;
+
+  int vert = 20;
+
+
+  text1 = "by potatogam.es";
+  text1Size = 24;
+  text1Width = MeasureText(text1.c_str(), text1Size);
+  DrawText(text1.c_str(), (GetScreenWidth() - text1Width) / 2,
+           vert + line++ * GetScreenHeight() / lines, text1Size, WHITE);
+
+  text1 = "PLEASE VISIT MY STREAM TO SEE HOW I MADE THIS";
+  text1Size = 20;
+  text1Width = MeasureText(text1.c_str(), text1Size);
+  DrawText(text1.c_str(), (GetScreenWidth() - text1Width) / 2,
+           vert + line++ * GetScreenHeight() / lines, text1Size, WHITE);
+
+  text1 = "https://www.twitch.tv/potatogamedev";
+  text1Size = 20;
+  text1Width = MeasureText(text1.c_str(), text1Size);
+  DrawText(text1.c_str(), (GetScreenWidth() - text1Width) / 2,
+           vert + line++ * GetScreenHeight() / lines, text1Size, WHITE);
+
+  text1 = "Open Source: https://github.com/PotatoGameDev/bucket-stand";
+  text1Size = 20;
+  text1Width = MeasureText(text1.c_str(), text1Size);
+  DrawText(text1.c_str(), (GetScreenWidth() - text1Width) / 2,
+           vert + line++ * GetScreenHeight() / lines, text1Size, WHITE);
+
+
+  int i = 1;
+  for (auto cred : credits) {
+    text1 = cred.file;
+    text1Size = 12;
+    text1Width = MeasureText(text1.c_str(), text1Size);
+    DrawText(text1.c_str(), (GetScreenWidth() - text1Width) / 2,
+             vert + line++ * GetScreenHeight() / lines, text1Size, WHITE);
+
+    text1 = cred.author;
+    text1Size = 12;
+    text1Width = MeasureText(text1.c_str(), text1Size);
+    DrawText(text1.c_str(), (GetScreenWidth() - text1Width) / 2,
+             vert + line++ * GetScreenHeight() / lines, text1Size, WHITE);
+
+    line++;
+  }
+
+
+}
+
+
 } // namespace potato_bucket

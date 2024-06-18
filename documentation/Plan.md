@@ -43,8 +43,8 @@ Phase 10:
 
 Phase 11:
 - Add more enemies (kangaroos!!!! Giant spider!!!)
-- Add some bushes?
-- Add a hotel (?) in the last one
+- ~~Add some bushes?~~
+- ~~Add a hotel (?) in the last one~~ CANCELLED
 
 Phase 12:
 - web assembly build

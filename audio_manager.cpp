@@ -12,7 +12,6 @@ AudioMan::~AudioMan(){};
 
 float CalculateVolume(Vector2 listener, Vector2 source) {
   float distance = Vector2Distance(listener, source);
-  std::cout << "distance to enemy: " << distance << std::endl;
   float maxDistance = 500.0f;
   return Clamp(1.0f - (distance / maxDistance), 0.0f, maxDistance);
 }
@@ -29,9 +28,6 @@ void AudioMan::play(std::string fileName, Vector2 playerPos,
                     Vector2 soundSourcePos) {
   float volume = CalculateVolume(playerPos, soundSourcePos);
   float pan = CalculatePan(playerPos, soundSourcePos);
-
-  std::cout << "Pan: " << pan << " ";
-  std::cout << "volume: " << volume << std::endl;
 
   auto found = cache.find(fileName);
   if (found != cache.end()) {

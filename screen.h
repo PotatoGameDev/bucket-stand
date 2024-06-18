@@ -15,6 +15,7 @@ enum class ScreenFlow {
   Repeat,
   MainMenu,
   Exit,
+  Credits,
   Summary,
   Introduction
 };
@@ -66,6 +67,25 @@ private:
 public:
   WorldResult result{};
   SummaryScreen();
+  ScreenFlow update() override;
+  void draw() override;
+};
+
+// ======================================================================
+struct Credit {
+  std::string file;
+  std::string author;
+
+  Credit(std::string, std::string);
+};
+
+class CreditsScreen : public Screen {
+private:
+    std::vector<Credit> credits{};
+    int framesLeft = 60 * 10;
+public:
+  WorldResult result{};
+  CreditsScreen();
   ScreenFlow update() override;
   void draw() override;
 };

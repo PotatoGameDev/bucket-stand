@@ -22,16 +22,18 @@ int main() {
 
   std::vector<WorldSettings> levels;
 
-  levels.emplace_back(1, "Beveridge", "Mansfield");
   levels.emplace_back(3, "Mansfield", "Euroa");
-  levels.emplace_back(10, "Euroa", "Greta");
-  levels.emplace_back(20, "Greta", "Glenrowan");
-  levels.emplace_back(50, "Glenrowan", "");
+  levels.emplace_back(10, "Beveridge", "Mansfield");
+  levels.emplace_back(20, "Euroa", "Greta");
+  levels.emplace_back(30, "Greta", "Glenrowan");
+  levels.emplace_back(100, "Glenrowan", "");
 
   std::unique_ptr<WorldScreen> worldScreen = std::make_unique<WorldScreen>();
   std::unique_ptr<MenuScreen> mainMenuScreen = std::make_unique<MenuScreen>();
   std::unique_ptr<SummaryScreen> summaryScreen =
       std::make_unique<SummaryScreen>();
+
+  std::unique_ptr<CreditsScreen> creditsScreen = std::make_unique<CreditsScreen>();
 
   Screen *currentScreen = mainMenuScreen.get();
   int currentLevel = 0;
@@ -73,6 +75,9 @@ int main() {
       break;
     case ScreenFlow::MainMenu:
       currentScreen = mainMenuScreen.get();
+      break;
+    case ScreenFlow::Credits:
+      currentScreen = creditsScreen.get();
       break;
     case ScreenFlow::Exit:
     case ScreenFlow::None:

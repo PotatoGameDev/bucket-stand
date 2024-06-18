@@ -1,6 +1,8 @@
 #include "world.h"
+#include "anim.h"
 #include "object.h"
 #include "player.h"
+#include "texture_cache.h"
 #include <cstdlib>
 #include <iostream>
 #include <raylib.h>
@@ -17,7 +19,7 @@ WorldSettings::WorldSettings(int winCondition, std::string location,
 World::World() : camera{0}, settings{}, player{0.0, 0.0, {}} {}
 
 World::World(unsigned int worldSeed, WorldSettings settings)
-    : player{0.0, 0.0, {100.f, 1.0f, 60}}, camera{0}, settings{settings} {
+    : player{0.0, 0.0, {500.f, 2.0f, 30}}, camera{0}, settings{settings} {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
@@ -30,17 +32,21 @@ World::World(unsigned int worldSeed, WorldSettings settings)
 
   objects.emplace_back(player.box.x, player.box.y, "tree.png");
 
-  for (int i{-GetScreenWidth()-50}; i < GetScreenWidth()+50; i += 20) {
+  for (int i{-GetScreenWidth() - 50}; i < GetScreenWidth() + 50; i += 20) {
     int bushNo = rand() % 3;
-    objects.emplace_back(i, GetScreenHeight(), "bush" + std::to_string(bushNo) +  ".png");
+    objects.emplace_back(i, GetScreenHeight(),
+                         "bush" + std::to_string(bushNo) + ".png");
     bushNo = rand() % 3;
-    objects.emplace_back(i, -GetScreenHeight(), "bush" + std::to_string(bushNo) +  ".png");
+    objects.emplace_back(i, -GetScreenHeight(),
+                         "bush" + std::to_string(bushNo) + ".png");
   }
-  for (int i{-GetScreenHeight()-50}; i < GetScreenHeight()+50; i += 20) {
+  for (int i{-GetScreenHeight() - 50}; i < GetScreenHeight() + 50; i += 20) {
     int bushNo = rand() % 3;
-    objects.emplace_back(GetScreenWidth(), i, "bush" + std::to_string(bushNo) +  ".png");
+    objects.emplace_back(GetScreenWidth(), i,
+                         "bush" + std::to_string(bushNo) + ".png");
     bushNo = rand() % 3;
-    objects.emplace_back(-GetScreenWidth(), i, "bush" + std::to_string(bushNo) +  ".png");
+    objects.emplace_back(-GetScreenWidth(), i,
+                         "bush" + std::to_string(bushNo) + ".png");
   }
 
   backgnd = LoadTexture("ass/sand.png");
@@ -54,9 +60,11 @@ WorldFlow World::update() {
 
     if (bu->dead()) {
       bu = bullets.erase(bu);
+    TextureCache::Instance().print("bullet erased");
       continue;
     }
 
+    TextureCache::Instance().print("before bullets check");
     if (bu->playerBullet) {
       // This handles collisions bullet/enemy
       bool hit = false;
@@ -64,7 +72,9 @@ WorldFlow World::update() {
       for (auto en = enemies.begin(); en != enemies.end();) {
         if (CheckCollisionRecs(bu->box, en->box)) {
           // enemy killed
+          TextureCache::Instance().print("before enemy erase");
           en = enemies.erase(en);
+          TextureCache::Instance().print("after enemy erase");
           hit = true;
           player.currentScore++;
           break;
@@ -74,18 +84,20 @@ WorldFlow World::update() {
       }
       if (hit) {
         bu = bullets.erase(bu);
+    TextureCache::Instance().print("bullet erased enemy");
         continue;
       }
     } else {
       if (CheckCollisionRecs(bu->box, player.box)) {
         player.currentLife -= 10;
         bu = bullets.erase(bu);
+    TextureCache::Instance().print("bullet erased player");
         continue;
       }
     }
 
     // This handles collisions bullet/bullet
-    // std::cout << "bullet / bullet col" << std::endl;
+    std::cout << "bullet / bullet col" << std::endl;
     for (auto ob = bullets.begin(); ob != bullets.end();) {
       if (bu == ob) {
         ob++;
@@ -104,11 +116,13 @@ WorldFlow World::update() {
     bu++;
   }
 
+    TextureCache::Instance().print("after collisions");
   std::cout << "updating objects" << std::endl;
   for (auto &o : objects) {
     o.update();
   }
 
+    TextureCache::Instance().print("after updating");
   std::cout << "updating enemies" << std::endl;
   for (auto &e : enemies) {
     std::cout << "before update enemies" << std::endl;
@@ -116,15 +130,16 @@ WorldFlow World::update() {
     std::cout << "after update enemies" << std::endl;
   }
 
+    TextureCache::Instance().print("after updating enemies");
   std::cout << "updating player" << std::endl;
   Vector2 playerVelocity = player.update(frameNo, bullets, camera);
+    TextureCache::Instance().print("after updating player");
 
   Rectangle playerNewBox = player.box;
   playerNewBox.x += playerVelocity.x;
   playerNewBox.y += playerVelocity.y;
 
-  if (playerNewBox.x > GetScreenWidth() ||
-      playerNewBox.x < -GetScreenWidth()) {
+  if (playerNewBox.x > GetScreenWidth() || playerNewBox.x < -GetScreenWidth()) {
     playerNewBox.x = player.box.x;
   }
   if (playerNewBox.y > GetScreenHeight() ||
@@ -139,6 +154,8 @@ WorldFlow World::update() {
 
   std::cout << "gening ens" << std::endl;
   // Generate enemies
+
+    TextureCache::Instance().print("before gening");
   if (frameNo % (5 * 60) == 0) {
     int precission = 100;
 
@@ -152,12 +169,27 @@ WorldFlow World::update() {
 
     Vector2 enemyBox{randX, randY};
 
-    std::cout << "enem gening" << std::endl;
-    enemies.emplace_back(enemyBox);
+    int enemType = rand() % 2;
+
+    std::cout << "============================================" << std::endl;
+    std::cout << "============================================" << std::endl;
+    std::cout << "============================================" << std::endl;
+    std::cout << "enem gening " << enemType << std::endl;
+    std::cout << "============================================" << std::endl;
+    std::cout << "============================================" << std::endl;
+    std::cout << "============================================" << std::endl;
+
+    if (enemType == 0) {
+      enemies.emplace_back(enemyBox, Anim{"enemy.png", 6});
+    } else if (enemType == 1) {
+      enemies.emplace_back(enemyBox, Anim{"spider.png", 6});
+    }
+
     std::cout << "enem gened" << std::endl;
   }
 
   std::cout << "up end" << std::endl;
+    TextureCache::Instance().print("after gening");
 
   if (player.currentScore >= settings.winCondition) {
     return WorldFlow::Win;

@@ -2,6 +2,7 @@
 #define POTATO_BUCKET_ANIM_H
 
 #include "raylib.h"
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -14,12 +15,14 @@ private:
   int framesSpeed = 8;
   int frames;
   Rectangle frameRect;
-  Texture2D &texture;
+  std::shared_ptr<Texture2D> texture;
 
 public:
 
   int width {};
   int height {};
+
+  std::string textureFile;
 
   Anim(std::string, int);
 
@@ -29,6 +32,7 @@ public:
 
   void update();
   void draw(Vector2, Rectangle, Vector2 = {1.0, 1.0});
+  std::string id();
 };
 
 } // namespace potato_bucket
