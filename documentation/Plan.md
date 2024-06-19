@@ -42,15 +42,30 @@ Phase 10:
 - ~~Add some music~~
 
 Phase 11:
-- Add more enemies (kangaroos!!!! Giant spider!!!)
+- Add more enemies (kangaroos!!!! ~~Giant spider!!!~~)
 - ~~Add some bushes?~~
 - ~~Add a hotel (?) in the last one~~ CANCELLED
 
 Phase 12:
+- ~~Refactor enemies so that there are different kinds~~
+- ~~Make spiders not shoot~~
+- ~~Make spiders hurt the player on contact~~
+- Make enemies stop in some distance to the player
+
+Phase 13:
 - web assembly build
 - win build
 - linux build
 
-Phase 13:
+Phase 14:
+- Main menu (start, quit, credits, mute)
+
+Phase 15:
 - Add FUN
 - Have FUN
+
+PLANNED
+- Refactor the code a bit (cleanup)
+
+BUGS
+

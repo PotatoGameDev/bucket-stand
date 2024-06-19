@@ -1,10 +1,11 @@
 #include "world.h"
 #include "anim.h"
+#include "enemy.h"
 #include "object.h"
 #include "player.h"
-#include "texture_cache.h"
 #include <cstdlib>
 #include <iostream>
+#include <memory>
 #include <raylib.h>
 #include <raymath.h>
 #include <string>
@@ -55,6 +56,9 @@ World::World(unsigned int worldSeed, WorldSettings settings)
 WorldFlow World::update() {
   frameNo++;
 
+  // ========================================================
+  // ===================== COLLISIONS =======================
+  // ========================================================
   for (auto bu = bullets.begin(); bu != bullets.end();) {
     bu->update();
 
@@ -64,11 +68,11 @@ WorldFlow World::update() {
     }
 
     if (bu->playerBullet) {
-      // This handles collisions bullet/enemy
+      // =================== BULLET - ENEMY ======================
       bool hit = false;
       // std::cout << "bullet / enemy col" << std::endl;
       for (auto en = enemies.begin(); en != enemies.end();) {
-        if (CheckCollisionRecs(bu->box, en->box)) {
+        if (CheckCollisionRecs(bu->box, en->get()->box)) {
           // enemy killed
           en = enemies.erase(en);
           hit = true;
@@ -83,6 +87,7 @@ WorldFlow World::update() {
         continue;
       }
     } else {
+      // =================== BULLET - PLAYER ======================
       if (CheckCollisionRecs(bu->box, player.box)) {
         player.currentLife -= 10;
         bu = bullets.erase(bu);
@@ -90,7 +95,7 @@ WorldFlow World::update() {
       }
     }
 
-    // This handles collisions bullet/bullet
+    // =================== BULLET - BULLET ======================
     std::cout << "bullet / bullet col" << std::endl;
     for (auto ob = bullets.begin(); ob != bullets.end();) {
       if (bu == ob) {
@@ -115,18 +120,25 @@ WorldFlow World::update() {
     bu++;
   }
 
+  // ========================================================
+  // ======================= UPDATE =========================
+  // ========================================================
+
+  // =================== OBJECTS ======================
   std::cout << "updating objects" << std::endl;
   for (auto &o : objects) {
     o.update();
   }
 
+  // =================== ENEMIES ======================
   std::cout << "updating enemies" << std::endl;
   for (auto &e : enemies) {
     std::cout << "before update enemies" << std::endl;
-    e.update(player, frameNo, bullets);
+    e->update(player, frameNo, bullets);
     std::cout << "after update enemies" << std::endl;
   }
 
+  // =================== PLAYER ======================
   std::cout << "updating player" << std::endl;
   Vector2 playerVelocity = player.update(frameNo, bullets, camera);
 
@@ -147,6 +159,9 @@ WorldFlow World::update() {
 
   camera.target = Vector2{player.box.x, player.box.y};
 
+  // ========================================================
+  // ====================== GENERATE ========================
+  // ========================================================
   std::cout << "gening ens" << std::endl;
   // Generate enemies
 
@@ -168,15 +183,21 @@ WorldFlow World::update() {
     std::cout << "enem gening " << enemType << std::endl;
 
     if (enemType == 0) {
-      enemies.emplace_back(enemyBox, Anim{"enemy.png", 6});
+      enemies.push_back(
+          std::make_unique<Sheriff>(enemyBox, Anim{"enemy.png", 6}));
     } else if (enemType == 1) {
-      enemies.emplace_back(enemyBox, Anim{"spider.png", 6});
+      enemies.push_back(
+          std::make_unique<Spider>(enemyBox, Anim{"spider.png", 6}, 1));
     }
 
     std::cout << "enem gened" << std::endl;
   }
 
   std::cout << "up end" << std::endl;
+
+  // ========================================================
+  // ======================== POST ==========================
+  // =======================================================
 
   if (player.currentScore >= settings.winCondition) {
     return WorldFlow::Win;
@@ -232,7 +253,7 @@ void World::draw() {
     b.draw();
   }
   for (auto &e : enemies) {
-    e.draw();
+    e->draw();
   }
 
   player.draw();
@@ -251,8 +272,9 @@ void World::draw() {
 
   Color lifeColor = player.currentLife > 30 ? GREEN : RED;
 
-  DrawRectangleRec({GetScreenWidth() / 2 - player.currentLife / 2, 40,
-                    player.currentLife, 10},
-                   lifeColor);
+  DrawRectangleRec(
+      {static_cast<float>(GetScreenWidth()) / 2 - player.currentLife / 2, 40,
+       player.currentLife, 10},
+      lifeColor);
 }
 } // namespace potato_bucket

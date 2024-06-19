@@ -4,7 +4,6 @@
 #include "screen.h"
 #include "texture_cache.h"
 #include "world.h"
-#include <iterator>
 #include <memory>
 #include <vector>
 

@@ -60,7 +60,7 @@ void Sheriff::update(Player &player, int frameNo, std::vector<Bullet> &bullets) 
   float distance = Vector2LengthSqr(toSheriff);
   int stopThreshold = 100;
   stopThreshold *= stopThreshold;
-  int retreatThreshold = 80;
+  int retreatThreshold = 50;
   retreatThreshold *= retreatThreshold;
 
   if (distance < stopThreshold) {

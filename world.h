@@ -7,7 +7,8 @@
 #include "object.h"
 #include "player.h"
 #include "raylib.h"
-#include <cwctype>
+#include <algorithm>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -37,7 +38,7 @@ private:
   Texture2D backgnd;
   std::vector<Object> objects{};
   std::vector<Bullet> bullets{};
-  std::vector<Enemy> enemies{};
+  std::vector<std::unique_ptr<Enemy>> enemies{};
   int frameNo{};
   WorldSettings settings;
 
