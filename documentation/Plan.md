@@ -66,6 +66,7 @@ Phase 15:
 
 PLANNED
 - Refactor the code a bit (cleanup)
+- The damage should be calculated based on the relative speed of objects.
 
 BUGS
-
+- Add drawing sequence so that items at the top of the screen are drawn first.
