@@ -42,7 +42,7 @@ Phase 10:
 - ~~Add some music~~
 
 Phase 11:
-- Add more enemies (kangaroos!!!! ~~Giant spider!!!~~)
+- **Add more enemies (kangaroos!!!! ~~Giant spider!!!~~)**
 - ~~Add some bushes?~~
 - ~~Add a hotel (?) in the last one~~ CANCELLED
 
@@ -50,15 +50,19 @@ Phase 12:
 - ~~Refactor enemies so that there are different kinds~~
 - ~~Make spiders not shoot~~
 - ~~Make spiders hurt the player on contact~~
-- Make enemies stop in some distance to the player
+- ~~Make enemies stop in some distance to the player~~
 
 Phase 13:
 - web assembly build
 - win build
 - linux build
+- github action for linux build
 
 Phase 14:
-- Main menu (start, quit, credits, mute)
+- ~~Main menu (start, quit, credits, mute)~~
+- ~~In mode 1: Mouse selects a button, pressing left on a selected button runs the action.~~
+- ~~In mode 2: Arrow keys move between buttons, smashing enter selects the currently selected button.~~
+- ~~In any mode: Esc exits.~~
 
 Phase 15:
 - Add FUN
@@ -70,3 +74,4 @@ PLANNED
 
 BUGS
 - Add drawing sequence so that items at the top of the screen are drawn first.
+- Check with valgrind

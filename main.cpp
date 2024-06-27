@@ -28,11 +28,21 @@ int main() {
   levels.emplace_back(100, "Glenrowan", "");
 
   std::unique_ptr<WorldScreen> worldScreen = std::make_unique<WorldScreen>();
-  std::unique_ptr<MenuScreen> mainMenuScreen = std::make_unique<MenuScreen>();
+
+  // Move to some text based config file or something, for translations or stuff...
+  MainMenuScreenSettings mainMenuScreenSettings{
+    50,
+    "DEPRESS [ENTER] TO PLAY",
+    WHITE,
+  };
+
+  std::unique_ptr<MainMenuScreen> mainMenuScreen =
+      std::make_unique<MainMenuScreen>(mainMenuScreenSettings);
   std::unique_ptr<SummaryScreen> summaryScreen =
       std::make_unique<SummaryScreen>();
 
-  std::unique_ptr<CreditsScreen> creditsScreen = std::make_unique<CreditsScreen>();
+  std::unique_ptr<CreditsScreen> creditsScreen =
+      std::make_unique<CreditsScreen>();
 
   Screen *currentScreen = mainMenuScreen.get();
   int currentLevel = 0;
@@ -93,7 +103,7 @@ int main() {
     DrawFPS(GetScreenWidth() - 30, 10);
     EndDrawing();
   }
-  
+
   // TODO: Handle in destructors instead:
   AudioMan::Instance().unload();
   TextureCache::Instance().unload();

@@ -5,7 +5,7 @@ project(BucketGang)
 set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/ass)
 set(BUILD_ASSETS_DIR ${CMAKE_BINARY_DIR}/ass)
 
-add_executable(${PROJECT_NAME} main.cpp player.cpp world.cpp camera.cpp object.cpp anim.cpp bullet.cpp enemy.cpp texture_cache.cpp screen.cpp audio_manager.cpp matildas.cpp)
+add_executable(${PROJECT_NAME} main.cpp player.cpp world.cpp camera.cpp object.cpp anim.cpp bullet.cpp enemy.cpp texture_cache.cpp screen.cpp audio_manager.cpp matildas.cpp gui.cpp)
 
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD

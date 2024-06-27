@@ -7,11 +7,11 @@ namespace potato_bucket {
 
 Matildas::Matildas() {
   cache.push_back(LoadMusicStream("ass/Waltzing_Matilda.ogg"));
-  cache.push_back(
-      LoadMusicStream("ass/Waltzing-Matilda-_Christina-Macpherson_-Wikipedia.ogg"));
+  cache.push_back(LoadMusicStream(
+      "ass/Waltzing-Matilda-_Christina-Macpherson_-Wikipedia.ogg"));
 }
 
-Matildas::~Matildas(){};
+Matildas::~Matildas() {};
 
 void Matildas::giveMeNextOne() {
   current = rand() % cache.size();

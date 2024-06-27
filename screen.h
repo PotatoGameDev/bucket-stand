@@ -1,24 +1,15 @@
 #ifndef POTATO_BUCKET_SCREEN_H
 #define POTATO_BUCKET_SCREEN_H
 
+#include "gui.h"
 #include "raylib.h"
 #include "world.h"
+#include <memory>
 
 namespace potato_bucket {
 
 struct WorldScreenSettings {};
 
-enum class ScreenFlow {
-  None,
-  FirstWorld,
-  NextWorld,
-  Repeat,
-  MainMenu,
-  Exit,
-  Credits,
-  Summary,
-  Introduction
-};
 
 // ======================================================================
 class Screen {
@@ -44,19 +35,21 @@ public:
 };
 
 // ======================================================================
-struct MenuScreenSettings {
+struct MainMenuScreenSettings {
   int mainTextSize = 25;
   std::string mainText = "DEPRESS [ENTER] TO PLAY";
   Color mainTextColor = WHITE;
 };
 
-class MenuScreen : public Screen {
+class MainMenuScreen : public Screen {
 private:
-  MenuScreenSettings settings;
+  MainMenuScreenSettings settings;
   int mainTextWidth{};
+  std::vector<std::unique_ptr<Button>> buttons;
+  Button *selectedButton = nullptr;
 
 public:
-  MenuScreen(MenuScreenSettings = {});
+  MainMenuScreen(MainMenuScreenSettings = {});
   ScreenFlow update() override;
   void draw() override;
 };

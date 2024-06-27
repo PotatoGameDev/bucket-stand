@@ -1,7 +1,10 @@
 #include "screen.h"
+#include "gui.h"
 #include "matildas.h"
+#include "screenflow.h"
 #include "world.h"
 #include <cstdlib>
+#include <memory>
 #include <raylib.h>
 #include <string>
 
@@ -32,43 +35,100 @@ ScreenFlow WorldScreen::update() {
 
 WorldResult WorldScreen::result() { return world.result(); }
 
-void WorldScreen::start(WorldSettings settings) { 
-    world = {0, settings};
+void WorldScreen::start(WorldSettings settings) {
+  world = {0, settings};
 
-    Matildas::Instance().giveMeNextOne();
+  Matildas::Instance().giveMeNextOne();
 }
 
 void WorldScreen::draw() { world.draw(); }
 
 // ======================================================================
-//                              MenuScreen
+//                              MainMenuScreen
 // ======================================================================
-MenuScreen::MenuScreen(MenuScreenSettings settings) : settings{settings} {
-  mainTextWidth = MeasureText(settings.mainText.c_str(), settings.mainTextSize);
+MainMenuScreen::MainMenuScreen(MainMenuScreenSettings settings)
+    : settings{settings} {
+  buttons.push_back(std::make_unique<Button>(Vector2{0.5, 0.2}, "Credits",
+                                             ScreenFlow::Credits));
+  Button *creditsButton = buttons.back().get();
+
+  buttons.push_back(std::make_unique<Button>(
+      Vector2{0.5, 0.39}, settings.mainText, ScreenFlow::Introduction));
+  Button *startButton = buttons.back().get();
+  startButton->setFontSize(settings.mainTextSize);
+  startButton->fontColor = settings.mainTextColor;
+  selectedButton = startButton;
+  selectedButton->selected = true;
+
+  buttons.push_back(
+      std::make_unique<CheckButton>(Vector2{0.5, 0.7}, "MUTE", "UNMUTE"));
+  Button *muteButton = buttons.back().get();
+
+  buttons.push_back(
+      std::make_unique<Button>(Vector2{0.5, 0.9}, "EXIT", ScreenFlow::Exit));
+  Button *exitButton = buttons.back().get();
+
+  creditsButton->down = startButton;
+  startButton->down = muteButton;
+  muteButton->down = exitButton;
+
+  exitButton->up = muteButton;
+  muteButton->up = startButton;
+  startButton->up = creditsButton;
 };
 
-ScreenFlow MenuScreen::update() {
-  if (IsKeyPressed(KEY_ENTER)) {
-    return ScreenFlow::Introduction;
+ScreenFlow MainMenuScreen::update() {
+  if (IsKeyPressed(KEY_ESCAPE)) {
+    return ScreenFlow::Exit;
   }
 
-  if (IsKeyPressed(KEY_ESCAPE)) {
-    return ScreenFlow::Credits;
+  // This handles the mouse mode:
+  for (auto &butt : buttons) {
+    Button *newSelected = butt->update();
+
+    if (newSelected != nullptr) {
+      if (selectedButton != nullptr) {
+        selectedButton->selected = false;
+      }
+      selectedButton = newSelected;
+      selectedButton->selected = true;
+    }
+
+    if (butt->pressed()) {
+      return butt->doAction();
+    }
+  }
+
+  // This handles the keyboard mode:
+  if (selectedButton != nullptr) {
+    if (selectedButton->down != nullptr && (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_D) || IsKeyPressed(KEY_J))) {
+        selectedButton->selected = false;
+        selectedButton = selectedButton->down;
+        selectedButton->selected = true;
+    } else if (selectedButton->up != nullptr && (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_E) || IsKeyPressed(KEY_K))) {
+        selectedButton->selected = false;
+        selectedButton = selectedButton->up;
+        selectedButton->selected = true;
+    }
+  }
+
+  if (IsKeyPressed(KEY_ENTER)) {
+    return selectedButton->doAction();
   }
 
   return ScreenFlow::None;
 }
 
-void MenuScreen::draw() {
-  DrawText(settings.mainText.c_str(), (GetScreenWidth() - mainTextWidth) / 2,
-           GetScreenHeight() / 2, settings.mainTextSize,
-           settings.mainTextColor);
+void MainMenuScreen::draw() {
+  for (auto &butt : buttons) {
+      butt->draw();
+  }
 }
 
 // ======================================================================
 //                              SummaryScreen
 // ======================================================================
-SummaryScreen::SummaryScreen(){};
+SummaryScreen::SummaryScreen() {};
 
 ScreenFlow SummaryScreen::update() {
   if (IsKeyPressed(KEY_ENTER)) {
@@ -109,7 +169,7 @@ void SummaryScreen::draw() {
     text1Width = MeasureText(text1.c_str(), text1Size);
     DrawText(text1.c_str(), (GetScreenWidth() - text1Width) / 2,
              vert + line++ * GetScreenHeight() / lines, text1Size, WHITE);
-    
+
     text1 = "PUT A BUCKET ON HIS HEAD AND STARTED";
     text1Size = 26;
     text1Width = MeasureText(text1.c_str(), text1Size);
@@ -204,8 +264,9 @@ void SummaryScreen::draw() {
 //                              CreditsScreen
 // ======================================================================
 ScreenFlow CreditsScreen::update() {
-  if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE) || framesLeft <= 0) {
-    return ScreenFlow::Exit;
+  if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE) ||
+      IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || framesLeft <= 0) {
+    return ScreenFlow::MainMenu;
   }
   framesLeft--;
 
@@ -213,27 +274,35 @@ ScreenFlow CreditsScreen::update() {
 }
 
 CreditsScreen::CreditsScreen() {
-  credits.emplace_back("https://commons.wikimedia.org/wiki/File:Waltzing_Matilda.ogg", "CambridgeBayWeather, CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia Commons");
-  credits.emplace_back("https://commons.wikimedia.org/wiki/File:Waltzing-Matilda-_Christina-Macpherson_-Wikipedia.ogg", "BDW82, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons");
-  credits.emplace_back("https://opengameart.org/content/giant-spider-32x32", "Spider made by Tuomo Untinen");
-  credits.emplace_back("https://opengameart.org/content/100-isometric-bushes", "Hansjörg Malthaner, and link here: http://opengameart.org/users/varkalandar");
+  credits.emplace_back(
+      "https://commons.wikimedia.org/wiki/File:Waltzing_Matilda.ogg",
+      "CambridgeBayWeather, CC BY-SA 3.0 "
+      "<https://creativecommons.org/licenses/by-sa/3.0>, via Wikimedia "
+      "Commons");
+  credits.emplace_back(
+      "https://commons.wikimedia.org/wiki/"
+      "File:Waltzing-Matilda-_Christina-Macpherson_-Wikipedia.ogg",
+      "BDW82, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, "
+      "via Wikimedia Commons");
+  credits.emplace_back("https://opengameart.org/content/giant-spider-32x32",
+                       "Spider made by Tuomo Untinen");
+  credits.emplace_back("https://opengameart.org/content/100-isometric-bushes",
+                       "Hansjörg Malthaner, and link here: "
+                       "http://opengameart.org/users/varkalandar");
 }
 
-Credit::Credit(std::string file, std::string author) : file{file}, author{author} {
-
-}
-
+Credit::Credit(std::string file, std::string author)
+    : file{file}, author{author} {}
 
 void CreditsScreen::draw() {
   int line{};
-  int lines = credits.size()*2 + 5;
+  int lines = credits.size() * 2 + 5;
 
   std::string text1{};
   int text1Size = 26;
   float text1Width = 0;
 
   int vert = 20;
-
 
   text1 = "by potatogam.es";
   text1Size = 24;
@@ -259,7 +328,6 @@ void CreditsScreen::draw() {
   DrawText(text1.c_str(), (GetScreenWidth() - text1Width) / 2,
            vert + line++ * GetScreenHeight() / lines, text1Size, WHITE);
 
-
   int i = 1;
   for (auto cred : credits) {
     text1 = cred.file;
@@ -276,9 +344,5 @@ void CreditsScreen::draw() {
 
     line++;
   }
-
-
 }
-
-
 } // namespace potato_bucket
