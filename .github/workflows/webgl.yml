@@ -1,0 +1,53 @@
+name: Build Raylib Game for WebGL
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Dependencies
+      run: sudo apt-get update && sudo apt-get install -y python3 git cmake
+
+    - name: Set up Emscripten
+      run: |
+        git clone https://github.com/emscripten-core/emsdk.git
+        cd emsdk
+        ./emsdk install latest
+        ./emsdk activate latest
+        source ./emsdk_env.sh
+      shell: bash
+
+
+
+    - name: Install Raylib
+      run: |
+        git clone https://github.com/raysan5/raylib.git
+        cd raylib/src
+        make PLATFORM=PLATFORM_WEB
+
+    - name: Build Project
+      run: |
+        source /home/runner/work/_temp/install_emsdk/emsdk_env.sh
+        emcc -o index.html -O2 -s WASM=1 -s USE_GLFW=3 -s FULL_ES3=1 -I. main.c -L. -lraylib -lm -ldl -lpthread -DPLATFORM_WEB
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: webgl-build
+        path: |
+          index.html
+          index.js
+          index.wasm
+          index.data
+
