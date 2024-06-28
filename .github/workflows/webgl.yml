@@ -35,7 +35,7 @@ jobs:
         source $GITHUB_ENV
         git clone https://github.com/raysan5/raylib.git
         cd raylib/src
-        emmake make PLATFORM=PLATFORM_WEB
+        emmake make PLATFORM=PLATFORM_WEB NO_EXAMPLES=1
         sudo make install
 
     - name: Configure and Build with CMake
@@ -46,6 +46,41 @@ jobs:
         emcmake cmake -DCMAKE_BUILD_TYPE=Release ..
         emmake make
 
+    - name: Create index.html
+      run: |
+        echo '<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>BucketGang</title>
+            <style>
+                body {
+                    margin: 0;
+                    overflow: hidden;
+                }
+                canvas {
+                    width: 100%;
+                    height: 100%;
+                    display: block;
+                }
+            </style>
+        </head>
+        <body>
+            <canvas id="canvas"></canvas>
+            <script>
+                var Module = {
+                    canvas: document.getElementById("canvas"),
+                    onRuntimeInitialized: function() {
+                        console.log("Application initialized.");
+                        // Your initialization code here
+                    }
+                };
+            </script>
+            <script src="BucketGang.js"></script>
+        </body>
+        </html>' > build/index.html
+      shell: bash
+
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
@@ -54,4 +89,3 @@ jobs:
           build/*.html
           build/*.js
           build/*.wasm
-

@@ -14,8 +14,10 @@ add_custom_command(
 )
 
 if(EMSCRIPTEN)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s WASM=1 -s USE_GLFW=3 -s FULL_ES3=1")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s WASM=1 -s USE_GLFW=3 -s FULL_ES3=1 -s ASYNCIFY")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s USE_GLFW=3 -s ASYNCIFY")
+    target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+else()
+    target_include_directories(${PROJECT_NAME} PRIVATE /usr/local/include)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libraylib.a)
 endif()
-
-target_include_directories(${PROJECT_NAME} PRIVATE /usr/local/include)
-target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libraylib.a)
