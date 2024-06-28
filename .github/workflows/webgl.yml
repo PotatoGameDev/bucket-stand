@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -25,14 +25,12 @@ jobs:
         cd emsdk
         ./emsdk install latest
         ./emsdk activate latest
-        source ./emsdk_env.sh
+        echo "source $(pwd)/emsdk_env.sh" >> $GITHUB_ENV
       shell: bash
 
-
-
-
-
-
+    - name: Source Emscripten Environment
+      run: source $GITHUB_ENV
+      shell: bash
 
     - name: Install Raylib
       run: |
@@ -42,7 +40,7 @@ jobs:
 
     - name: Build Project
       run: |
-        source ./emsdk/emsdk_env.sh
+        source $GITHUB_ENV
         emcc -o index.html -O2 -s WASM=1 -s USE_GLFW=3 -s FULL_ES3=1 -I. main.c -L. -lraylib -lm -ldl -lpthread -DPLATFORM_WEB
 
     - name: Upload artifact
@@ -54,9 +52,5 @@ jobs:
           index.js
           index.wasm
           index.data
-
-
-
-
 
 
