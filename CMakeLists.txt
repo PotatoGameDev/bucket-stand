@@ -13,6 +13,9 @@ add_custom_command(
     ${ASSETS_DIR} ${BUILD_ASSETS_DIR}
 )
 
+if(EMSCRIPTEN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s WASM=1 -s USE_GLFW=3 -s FULL_ES3=1")
+endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE /usr/local/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libraylib.a)
