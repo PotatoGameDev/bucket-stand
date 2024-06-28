@@ -37,6 +37,7 @@ jobs:
         cd raylib/src
         emmake make PLATFORM=PLATFORM_WEB NO_EXAMPLES=1
         sudo make install
+      shell: bash
 
     - name: Configure and Build with CMake
       run: |
@@ -45,6 +46,7 @@ jobs:
         cd build
         emcmake cmake -DCMAKE_BUILD_TYPE=Release ..
         emmake make
+      shell: bash
 
     - name: Create index.html
       run: |
