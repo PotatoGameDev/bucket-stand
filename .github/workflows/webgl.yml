@@ -35,19 +35,23 @@ jobs:
         source $GITHUB_ENV
         git clone https://github.com/raysan5/raylib.git
         cd raylib/src
-        make PLATFORM=PLATFORM_WEB
+        emmake make PLATFORM=PLATFORM_WEB
+        sudo make install
 
-    - name: Build Project
+    - name: Configure and Build with CMake
       run: |
         source $GITHUB_ENV
-        emcc -o index.html -O2 -s WASM=1 -s USE_GLFW=3 -s FULL_ES3=1 -I. main.c -L. -lraylib -lm -ldl -lpthread -DPLATFORM_WEB
+        mkdir build
+        cd build
+        emcmake cmake -DCMAKE_BUILD_TYPE=Release ..
+        emmake make
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: webgl-build
         path: |
-          index.html
-          index.js
-          index.wasm
-          index.data
+          build/*.html
+          build/*.js
+          build/*.wasm
+
