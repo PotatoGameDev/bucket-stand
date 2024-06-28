@@ -2,11 +2,12 @@ name: Build Raylib Game for WebGL
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    tags:
+      - v*
+
+env:
+  itchio_project: pixelheartsoftware/bucket-stand
+  itchio_channel: web 
 
 jobs:
   build:
@@ -84,10 +85,24 @@ jobs:
       shell: bash
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: webgl-build
         path: |
           build/*.html
           build/*.js
           build/*.wasm
+          build/ass/**
+
+    - name: Set Version
+      run: |
+        echo "version=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+
+    - name: Upload ${{ matrix.preset }} to itch.io project
+      uses: robpc/itchio-upload-action@v1
+      with:
+        path: build/${{ matrix.preset }}
+        project: ${{ env.itchio_project }}
+        channel: ${{ env.itchio_channel }}
+        version: ${{ env.version }}
+        api-key: ${{ secrets.ITCHIO_API_KEY }}
