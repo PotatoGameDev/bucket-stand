@@ -25,15 +25,14 @@ jobs:
         cd emsdk
         ./emsdk install latest
         ./emsdk activate latest
-        echo "source $(pwd)/emsdk_env.sh" >> $GITHUB_ENV
-      shell: bash
-
-    - name: Source Emscripten Environment
-      run: source $GITHUB_ENV
+        echo "EMSDK=$(pwd)" >> $GITHUB_ENV
+        echo "EMSDK_NODE=$(pwd)/node/$(ls node | head -n 1)/bin/node" >> $GITHUB_ENV
+        echo "PATH=$(pwd)/upstream/emscripten:$PATH" >> $GITHUB_ENV
       shell: bash
 
     - name: Install Raylib
       run: |
+        source $GITHUB_ENV
         git clone https://github.com/raysan5/raylib.git
         cd raylib/src
         make PLATFORM=PLATFORM_WEB
@@ -52,5 +51,3 @@ jobs:
           index.js
           index.wasm
           index.data
-
-
