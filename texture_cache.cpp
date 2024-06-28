@@ -18,7 +18,7 @@ std::shared_ptr<Texture2D> TextureCache::load(std::string path) {
     return found->second;
   }
 
-  Texture2D texture = LoadTexture(("ass/" + path).c_str());
+  Texture2D texture = LoadTexture((path).c_str());
   auto inserted = cache.insert(std::make_pair(path, std::make_shared<Texture2D>(std::move(texture))));
 
   return inserted.first->second;

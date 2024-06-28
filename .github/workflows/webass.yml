@@ -92,7 +92,11 @@ jobs:
           build/*.html
           build/*.js
           build/*.wasm
-          build/ass/**
+          build/*.ogg
+          build/*.png
+          build/*.jpg
+          build/*.wav
+
 
     - name: Set Version
       run: |

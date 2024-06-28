@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.11...3.16)
 project(BucketGang)
 
 set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/ass)
-set(BUILD_ASSETS_DIR ${CMAKE_BINARY_DIR}/ass)
+set(BUILD_ASSETS_DIR ${CMAKE_BINARY_DIR})
 
 add_executable(${PROJECT_NAME} main.cpp player.cpp world.cpp camera.cpp object.cpp anim.cpp bullet.cpp enemy.cpp texture_cache.cpp screen.cpp audio_manager.cpp matildas.cpp gui.cpp)
 
