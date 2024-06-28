@@ -79,6 +79,8 @@ ScreenFlow CheckButton::doAction() {
     SetMasterVolume(1.0f);
   }
 
+  setFontSize(fontSize);
+
   return action;
 }
 
