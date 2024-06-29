@@ -115,11 +115,26 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+
+
+
+
+
+
+
+
+
+
+
+
       - name: Checkout gh-pages branch
         uses: actions/checkout@v4
-        with:
-          ref: 'gh-pages'
-          
+
+      - name: Setup git
+        run: |
+          git fetch
+          git checkout -b gh-pages origin/gh-pages || git checkout -b gh-pages         
+
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
@@ -132,4 +147,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit -m 'Deploy artifacts to gh-pages 🚀'
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/PotatoGameDev/bucket-stand.git
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/PotatoGameDev/bucket-stand.git gh-pages
