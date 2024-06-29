@@ -133,4 +133,4 @@ jobs:
           git add .
           git commit -m 'Deploy artifacts to gh-pages 🚀'
           git push
-
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/PotatoGameDev/bucket-stand.git
