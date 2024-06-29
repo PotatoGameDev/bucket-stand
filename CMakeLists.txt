@@ -13,10 +13,16 @@ add_custom_command(
     ${ASSETS_DIR} ${BUILD_ASSETS_DIR}
 )
 
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy
+                   ${CMAKE_SOURCE_DIR}/index.html $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+
 if(EMSCRIPTEN)
     include_directories(${CMAKE_SOURCE_DIR}/raylib/src)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s WASM=1 -s USE_GLFW=3 -s FULL_ES3=1 -s ASYNCIFY")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s USE_GLFW=3 -s ASYNCIFY")
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s WASM=1 -s USE_GLFW=3 -s FULL_ES3=1 -s ASYNCIFY -lnodefs.js")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s USE_GLFW=3 -s ASYNCIFY -lnodefs.js")
+    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/ass@/assets")
     target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/raylib/src/libraylib.a)
 else()
     target_include_directories(${PROJECT_NAME} PRIVATE /usr/local/include)

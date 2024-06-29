@@ -6,9 +6,9 @@
 namespace potato_bucket {
 
 Matildas::Matildas() {
-  cache.push_back(LoadMusicStream("Waltzing_Matilda.ogg"));
+  cache.push_back(LoadMusicStream("assets/Waltzing_Matilda.ogg"));
   cache.push_back(LoadMusicStream(
-      "Waltzing-Matilda-_Christina-Macpherson_-Wikipedia.ogg"));
+      "assets/Waltzing-Matilda-_Christina-Macpherson_-Wikipedia.ogg"));
 }
 
 Matildas::~Matildas() {};

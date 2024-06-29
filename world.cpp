@@ -31,26 +31,26 @@ World::World(unsigned int worldSeed, WorldSettings settings)
 
   srand(worldSeed);
 
-  objects.emplace_back(player.box.x, player.box.y, "tree.png");
+  objects.emplace_back(player.box.x, player.box.y, "assets/tree.png");
 
   for (int i{-GetScreenWidth() - 50}; i < GetScreenWidth() + 50; i += 20) {
     int bushNo = rand() % 3;
     objects.emplace_back(i, GetScreenHeight(),
-                         "bush" + std::to_string(bushNo) + ".png");
+                         "assets/bush" + std::to_string(bushNo) + ".png");
     bushNo = rand() % 3;
     objects.emplace_back(i, -GetScreenHeight(),
-                         "bush" + std::to_string(bushNo) + ".png");
+                         "assets/bush" + std::to_string(bushNo) + ".png");
   }
   for (int i{-GetScreenHeight() - 50}; i < GetScreenHeight() + 50; i += 20) {
     int bushNo = rand() % 3;
     objects.emplace_back(GetScreenWidth(), i,
-                         "bush" + std::to_string(bushNo) + ".png");
+                         "assets/bush" + std::to_string(bushNo) + ".png");
     bushNo = rand() % 3;
     objects.emplace_back(-GetScreenWidth(), i,
-                         "bush" + std::to_string(bushNo) + ".png");
+                         "assets/bush" + std::to_string(bushNo) + ".png");
   }
 
-  backgnd = LoadTexture("ass/sand.png");
+  backgnd = LoadTexture("assets/sand.png");
 }
 
 WorldFlow World::update() {
