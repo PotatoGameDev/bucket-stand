@@ -110,3 +110,27 @@ jobs:
         channel: ${{ env.itchio_channel }}
         version: ${{ env.version }}
         api-key: ${{ secrets.ITCHIO_API_KEY }}
+
+  deploy: 
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: 'gh-pages'
+          
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: webgl-build
+          path: .
+          
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m 'Deploy artifacts to gh-pages 🚀'
+          git push
+
