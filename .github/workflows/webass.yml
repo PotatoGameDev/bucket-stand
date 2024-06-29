@@ -147,4 +147,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit -m 'Deploy artifacts to gh-pages 🚀'
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/PotatoGameDev/bucket-stand.git gh-pages
+          git push https://${{ secrets.GH_PAT }}@github.com/PotatoGameDev/bucket-stand.git gh-pages
