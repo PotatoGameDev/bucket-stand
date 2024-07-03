@@ -49,9 +49,6 @@ cmake --build build
 ```
 
 > For WEB build:
-```sh
-emrun --no_browser --port 8080 build/bucket-stand
-```
 
 ```sh
 emcmake cmake -DPLATFORM=Web -S . -B build
@@ -59,6 +56,11 @@ emcmake cmake -DPLATFORM=Web -S . -B build
 
 ```sh
 cmake --build build
+```
+
+> Publish devel: 
+```sh
+emrun --no_browser --port 8080 build/bucket-stand
 ```
 
 - Inside the build folder are another folder (named the same as the project name on CMakeLists.txt) with the executable and resources folder.

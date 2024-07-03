@@ -44,7 +44,6 @@ target_link_libraries(${PROJECT_NAME} raylib)
 if (${PLATFORM} STREQUAL "Web")
     # Tell Emscripten to build an example.html file.
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
-    # target_link_options(${PROJECT_NAME} PUBLIC "-sUSE_GLFW=3")
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY -s GL_ENABLE_GET_PROC_ADDRESS=1 -s INITIAL_MEMORY=64MB")
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/src/resources@/resources")

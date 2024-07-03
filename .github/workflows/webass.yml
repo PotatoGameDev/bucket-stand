@@ -31,57 +31,12 @@ jobs:
         echo "PATH=$(pwd)/upstream/emscripten:$PATH" >> $GITHUB_ENV
       shell: bash
 
-    - name: Install Raylib
-      run: |
-        source $GITHUB_ENV
-        git clone https://github.com/raysan5/raylib.git
-        cd raylib/src
-        emmake make PLATFORM=PLATFORM_WEB NO_EXAMPLES=1
-        sudo make install
-      shell: bash
-
     - name: Configure and Build with CMake
       run: |
         source $GITHUB_ENV
-        mkdir build
-        cd build
-        emcmake cmake -DCMAKE_BUILD_TYPE=Release ..
-        emmake make
-      shell: bash
-
-    - name: Create index.html
-      run: |
-        echo '<!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <title>BucketGang</title>
-            <style>
-                body {
-                    margin: 0;
-                    overflow: hidden;
-                }
-                canvas {
-                    width: 100%;
-                    height: 100%;
-                    display: block;
-                }
-            </style>
-        </head>
-        <body>
-            <canvas id="canvas"></canvas>
-            <script>
-                var Module = {
-                    canvas: document.getElementById("canvas"),
-                    onRuntimeInitialized: function() {
-                        console.log("Application initialized.");
-                        // Your initialization code here
-                    }
-                };
-            </script>
-            <script src="BucketGang.js"></script>
-        </body>
-        </html>' > build/index.html
+        emcmake cmake -DPLATFORM=Web -DCMAKE_BUILD_TYPE=Release -S . -B build
+        cmake --build build
+        mv build/bucket-stand/bucket-stand.html build/bucket-stand/index.html
       shell: bash
 
     - name: Upload artifact
@@ -89,14 +44,14 @@ jobs:
       with:
         name: webgl-build
         path: |
-          build/*.html
-          build/*.js
-          build/*.wasm
-          build/*.ogg
-          build/*.png
-          build/*.jpg
-          build/*.wav
-
+          build/bucket-stand/*.html
+          build/bucket-stand/*.js
+          build/bucket-stand/*.data
+          build/bucket-stand/*.wasm
+          build/bucket-stand/*.ogg
+          build/bucket-stand/*.png
+          build/bucket-stand/*.jpg
+          build/bucket-stand/*.wav
 
     - name: Set Version
       run: |
