@@ -2,12 +2,10 @@
 #define POTATO_BUCKET_WORLD_H
 
 #include "bullet.h"
-#include "camera.h"
 #include "enemy.h"
 #include "object.h"
 #include "player.h"
 #include "raylib.h"
-#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
@@ -35,7 +33,7 @@ struct WorldResult {
 
 class World {
 private:
-  Texture2D backgnd;
+  std::shared_ptr<Texture2D> backgnd;
   std::vector<Object> objects{};
   std::vector<Bullet> bullets{};
   std::vector<std::unique_ptr<Enemy>> enemies{};

@@ -3,10 +3,8 @@
 
 #include "raylib.h"
 #include "screenflow.h"
-#include <memory>
 #include <raymath.h>
 #include <string>
-#include <utility>
 
 namespace potato_bucket {
 
@@ -17,7 +15,7 @@ private:
 protected:
   int fontSize{20};
 public:
-  ~Button() = default;
+  virtual ~Button() = default;
   Button(Vector2, std::string, ScreenFlow);
 
   Vector2 positionPercent;

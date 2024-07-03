@@ -15,7 +15,7 @@ protected:
   Vector2 lastNonZeroVelocity = {1.0, 0.0};
 
 public:
-  ~Enemy() = default;
+  virtual ~Enemy() = default;
 
   Vector2 scale{1.0, 1.0};
   Rectangle box;

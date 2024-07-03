@@ -4,7 +4,6 @@
 #include "raymath.h"
 #include <raylib.h>
 #include <string>
-#include <iostream>
 
 namespace potato_bucket {
 

@@ -1,8 +1,10 @@
 #include "world.h"
 #include "anim.h"
 #include "enemy.h"
+#include "logging.h"
 #include "object.h"
 #include "player.h"
+#include "texture_cache.h"
 #include <cstdlib>
 #include <iostream>
 #include <memory>
@@ -31,26 +33,28 @@ World::World(unsigned int worldSeed, WorldSettings settings)
 
   srand(worldSeed);
 
-  objects.emplace_back(player.box.x, player.box.y, "assets/tree.png");
-
+  objects.emplace_back(player.box.x, player.box.y, "tree.png");
+/*
   for (int i{-GetScreenWidth() - 50}; i < GetScreenWidth() + 50; i += 20) {
     int bushNo = rand() % 3;
     objects.emplace_back(i, GetScreenHeight(),
-                         "assets/bush" + std::to_string(bushNo) + ".png");
+                         "bush" + std::to_string(bushNo) + ".png");
     bushNo = rand() % 3;
     objects.emplace_back(i, -GetScreenHeight(),
-                         "assets/bush" + std::to_string(bushNo) + ".png");
+                         "bush" + std::to_string(bushNo) + ".png");
   }
   for (int i{-GetScreenHeight() - 50}; i < GetScreenHeight() + 50; i += 20) {
     int bushNo = rand() % 3;
     objects.emplace_back(GetScreenWidth(), i,
-                         "assets/bush" + std::to_string(bushNo) + ".png");
+                         "bush" + std::to_string(bushNo) + ".png");
     bushNo = rand() % 3;
     objects.emplace_back(-GetScreenWidth(), i,
-                         "assets/bush" + std::to_string(bushNo) + ".png");
+                         "bush" + std::to_string(bushNo) + ".png");
   }
 
-  backgnd = LoadTexture("assets/sand.png");
+  */
+
+  backgnd = TextureCache::Instance().load("sand.png");
 }
 
 WorldFlow World::update() {
@@ -70,7 +74,6 @@ WorldFlow World::update() {
     if (bu->playerBullet) {
       // =================== BULLET - ENEMY ======================
       bool hit = false;
-      // std::cout << "bullet / enemy col" << std::endl;
       for (auto en = enemies.begin(); en != enemies.end();) {
         if (CheckCollisionRecs(bu->box, en->get()->box)) {
           // enemy killed
@@ -96,7 +99,6 @@ WorldFlow World::update() {
     }
 
     // =================== BULLET - BULLET ======================
-    std::cout << "bullet / bullet col" << std::endl;
     for (auto ob = bullets.begin(); ob != bullets.end();) {
       if (bu == ob) {
         ob++;
@@ -125,21 +127,16 @@ WorldFlow World::update() {
   // ========================================================
 
   // =================== OBJECTS ======================
-  std::cout << "updating objects" << std::endl;
   for (auto &o : objects) {
     o.update();
   }
 
   // =================== ENEMIES ======================
-  std::cout << "updating enemies" << std::endl;
   for (auto &e : enemies) {
-    std::cout << "before update enemies" << std::endl;
     e->update(player, frameNo, bullets);
-    std::cout << "after update enemies" << std::endl;
   }
 
   // =================== PLAYER ======================
-  std::cout << "updating player" << std::endl;
   Vector2 playerVelocity = player.update(frameNo, bullets, camera);
 
   Rectangle playerNewBox = player.box;
@@ -162,7 +159,6 @@ WorldFlow World::update() {
   // ========================================================
   // ====================== GENERATE ========================
   // ========================================================
-  std::cout << "gening ens" << std::endl;
   // Generate enemies
 
   if (frameNo % (5 * 60) == 0) {
@@ -180,7 +176,6 @@ WorldFlow World::update() {
 
     int enemType = rand() % 2;
 
-    std::cout << "enem gening " << enemType << std::endl;
 
     if (enemType == 0) {
       enemies.push_back(
@@ -190,10 +185,8 @@ WorldFlow World::update() {
           std::make_unique<Spider>(enemyBox, Anim{"spider.png", 6}, 1));
     }
 
-    std::cout << "enem gened" << std::endl;
   }
 
-  std::cout << "up end" << std::endl;
 
   // ========================================================
   // ======================== POST ==========================
@@ -210,12 +203,11 @@ WorldFlow World::update() {
 }
 
 void PrintRectum(const Rectangle &rect) {
-  std::cout << "Rectangle(" << rect.x << ", " << rect.y << ", " << rect.width
-            << ", " << rect.height << ")" << std::endl;
+  LOG("Rectangle(", rect.x, ", ", rect.y, ", ", rect.width, ", ", rect.height, ")");
 }
 
 void PrintVectorum(const Vector2 &vect) {
-  std::cout << "Rectangle(" << vect.x << ", " << vect.y << ")" << std::endl;
+  LOG("Rectangle(", vect.x, ", ", vect.y, ")");
 }
 
 WorldResult World::result() {
@@ -232,17 +224,17 @@ void World::draw() {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 
-  int xtiles = screenWidth / backgnd.width + 1;
-  int ytiles = screenHeight / backgnd.height + 1;
+  int xtiles = screenWidth / backgnd->width + 1;
+  int ytiles = screenHeight / backgnd->height + 1;
 
   for (int i = 0; i < xtiles; i++) {
     for (int j = 0; j < ytiles; j++) {
-      Vector2 pos = {static_cast<float>(i * backgnd.width) -
-                         (xtiles * (float)backgnd.width / 2),
-                     static_cast<float>(j * backgnd.height) -
-                         (ytiles * (float)backgnd.height / 2)};
+      Vector2 pos = {static_cast<float>(i * backgnd->width) -
+                         (xtiles * (float)backgnd->width / 2),
+                     static_cast<float>(j * backgnd->height) -
+                         (ytiles * (float)backgnd->height / 2)};
 
-      DrawTextureV(backgnd, pos, WHITE);
+      DrawTextureV(*backgnd, pos, WHITE);
     }
   }
 

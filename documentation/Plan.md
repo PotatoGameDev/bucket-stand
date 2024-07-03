@@ -75,3 +75,5 @@ PLANNED
 BUGS
 - Add drawing sequence so that items at the top of the screen are drawn first.
 - Check with valgrind
+- Do a loading screen and load all the resources in it
+- 

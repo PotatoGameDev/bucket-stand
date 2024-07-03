@@ -1,7 +1,4 @@
 #include "audio_manager.h"
-#include <algorithm>
-#include <iostream>
-#include <ostream>
 #include <raylib.h>
 #include <raymath.h>
 #include <string>
@@ -40,7 +37,7 @@ void AudioMan::play(std::string fileName, Vector2 playerPos,
     PlaySound(sound);
   }
 
-  Sound sound = LoadSound(("ass/" + fileName).c_str());
+  Sound sound = LoadSound(("resources/" + fileName).c_str());
   auto inserted = cache.insert(std::make_pair(fileName, std::move(sound)));
 
   if (volume <= 0.0) {
