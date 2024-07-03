@@ -57,10 +57,10 @@ jobs:
       run: |
         echo "version=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
 
-    - name: Upload ${{ matrix.preset }} to itch.io project
+    - name: Upload project to itch.io project
       uses: robpc/itchio-upload-action@v1
       with:
-        path: build/${{ matrix.preset }}
+        path: build/bucket-stand/
         project: ${{ env.itchio_project }}
         channel: ${{ env.itchio_channel }}
         version: ${{ env.version }}
