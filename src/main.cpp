@@ -40,7 +40,8 @@ int main() {
       std::make_unique<MainMenuScreen>(mainMenuScreenSettings);
   std::unique_ptr<SummaryScreen> summaryScreen =
       std::make_unique<SummaryScreen>();
-
+  std::unique_ptr<PerksScreen> perksScreen =
+      std::make_unique<PerksScreen>();
   std::unique_ptr<CreditsScreen> creditsScreen =
       std::make_unique<CreditsScreen>();
 
@@ -81,6 +82,9 @@ int main() {
     case ScreenFlow::Summary:
       summaryScreen->result = worldScreen->result();
       currentScreen = summaryScreen.get();
+      break;
+    case ScreenFlow::Perks:
+      currentScreen = perksScreen.get();
       break;
     case ScreenFlow::MainMenu:
       currentScreen = mainMenuScreen.get();

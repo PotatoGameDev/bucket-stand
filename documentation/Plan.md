@@ -53,10 +53,10 @@ Phase 12:
 - ~~Make enemies stop in some distance to the player~~
 
 Phase 13:
-- web assembly build
-- win build
-- linux build
-- github action for linux build
+- ~~web assembly build~~
+- **win build**
+- ~~linux build~~
+- ~~github action for linux build~~
 
 Phase 14:
 - ~~Main menu (start, quit, credits, mute)~~
@@ -65,10 +65,13 @@ Phase 14:
 - ~~In any mode: Esc exits.~~
 
 Phase 15:
+- Upgrades screen
+
+Phase 16:
 - Add FUN
 - Have FUN
 
-PLANNED
+IDEAS
 - Refactor the code a bit (cleanup)
 - The damage should be calculated based on the relative speed of objects.
 
@@ -76,4 +79,3 @@ BUGS
 - Add drawing sequence so that items at the top of the screen are drawn first.
 - Check with valgrind
 - Do a loading screen and load all the resources in it
-- 

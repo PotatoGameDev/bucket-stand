@@ -16,6 +16,14 @@ The direction (left/right) is determined by the side the player is facing.
 
 This is not going to be intuitive to play...
 
+## Screens
+### Perks screen
+![image](perks-screen.png)
+
+The player will be able to gain 5 perk points.
+Each of them they will be able to use to turn on one of the perks.
+The player will be able to turn off the perks and regain the points - to create different builds.
+The perks can be only on or off, no levels.
 ## Assets
 https://foozlecc.itch.io/lucifer-sorceress
 https://foozlecc.itch.io/lucifer-warrior

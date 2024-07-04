@@ -11,6 +11,7 @@ enum class ScreenFlow {
   MainMenu,
   Exit,
   Credits,
+  Perks,
   Summary,
   Introduction
 };

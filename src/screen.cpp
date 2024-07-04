@@ -19,11 +19,11 @@ ScreenFlow WorldScreen::update() {
   WorldFlow result = world.update();
 
   if (result == WorldFlow::Win) {
-    return ScreenFlow::Summary;
+    return ScreenFlow::Perks;
   }
 
   if (result == WorldFlow::Lose) {
-    return ScreenFlow::Summary;
+    return ScreenFlow::Perks;
   }
 
   if (IsKeyPressed(KEY_ESCAPE)) {
@@ -52,8 +52,8 @@ MainMenuScreen::MainMenuScreen(MainMenuScreenSettings settings)
                                              ScreenFlow::Credits));
   Button *creditsButton = buttons.back().get();
 
-  buttons.push_back(std::make_unique<Button>(
-      Vector2{0.5, 0.39}, settings.mainText, ScreenFlow::Introduction));
+  //buttons.push_back(std::make_unique<Button>( Vector2{0.5, 0.39}, settings.mainText, ScreenFlow::Introduction));
+  buttons.push_back(std::make_unique<Button>( Vector2{0.5, 0.39}, settings.mainText, ScreenFlow::Perks));
   Button *startButton = buttons.back().get();
   startButton->setFontSize(settings.mainTextSize);
   startButton->fontColor = settings.mainTextColor;
@@ -122,6 +122,64 @@ ScreenFlow MainMenuScreen::update() {
 void MainMenuScreen::draw() {
   for (auto &butt : buttons) {
       butt->draw();
+  }
+}
+
+// ======================================================================
+//                             PerksScreen 
+// ======================================================================
+PerksScreen::PerksScreen(PerksScreenSettings settings)
+    : settings{settings} {
+  perks.push_back(std::make_unique<PerkButton>(Vector2{0.1, 0.2}, 0.45f, "CHAIN REACTION"));
+  PerkButton *test = perks.back().get();
+};
+
+ScreenFlow PerksScreen::update() {
+  if (IsKeyPressed(KEY_ESCAPE)) {
+    //return ScreenFlow::Exit;
+    return ScreenFlow::Repeat;
+  }
+
+  // This handles the mouse mode:
+  for (auto &perk : perks) {
+    Button *newSelected = perk->update();
+
+    if (newSelected != nullptr) {
+      if (selectedPerk != nullptr) {
+        selectedPerk->selected = false;
+      }
+      selectedPerk = newSelected;
+      selectedPerk->selected = true;
+    }
+
+    if (perk->pressed()) {
+      perk->doAction();
+    }
+  }
+
+  // This handles the keyboard mode:
+  if (selectedPerk != nullptr) {
+    if (selectedPerk->down != nullptr && (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_D) || IsKeyPressed(KEY_J))) {
+        selectedPerk->selected = false;
+        selectedPerk= selectedPerk->down;
+        selectedPerk->selected = true;
+    } else if (selectedPerk->up != nullptr && (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_E) || IsKeyPressed(KEY_K))) {
+        selectedPerk->selected = false;
+        selectedPerk= selectedPerk->up;
+        selectedPerk->selected = true;
+    }
+  }
+
+  if (IsKeyPressed(KEY_ENTER)) {
+    selectedPerk->doAction();
+  }
+
+  return ScreenFlow::None;
+}
+
+void PerksScreen::draw() {
+  for (auto &perk: perks) {
+      perk->draw();
   }
 }
 

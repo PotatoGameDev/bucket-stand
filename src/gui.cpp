@@ -84,4 +84,61 @@ ScreenFlow CheckButton::doAction() {
   return action;
 }
 
+PerkButton::PerkButton(Vector2 positionPercent, float widthPercent,
+                       std::string description)
+    : Button(positionPercent, description, ScreenFlow::None) {
+  box = {GetScreenWidth() * positionPercent.x,
+         GetScreenHeight() * positionPercent.y, GetScreenWidth() * widthPercent,
+         static_cast<float>(this->fontSize + 20)};
+}
+
+ScreenFlow PerkButton::doAction() {
+  checked = !checked;
+
+  if (checked) {
+  } else {
+  }
+
+  return action;
+}
+
+void PerkButton::draw() {
+  DrawRectangleLinesEx(box, 2, fontColor);
+
+  float spacer = 1.0f;
+  float tickBoxWidth = box.height - spacer * 2;
+  Rectangle tickBox{box.x + spacer, box.y + spacer, tickBoxWidth, tickBoxWidth};
+  DrawRectangleLinesEx(tickBox, 2, fontColor);
+
+  DrawText(text.c_str(), 
+          box.x + box.width / 2 - textWidth / 2.0,
+          box.y + box.height / 2 - fontSize / 2.0,
+           fontSize, fontColor);
+
+  if (selected) {
+      DrawLineEx(
+              {
+                box.x,
+                box.y + static_cast<float>(tickBoxWidth/2.0)
+              },
+              {
+                box.x + static_cast<float>(tickBoxWidth/2.0),
+                box.y + tickBoxWidth
+              }, 
+              3,
+              RED);
+      DrawLineEx(
+              {
+                box.x + static_cast<float>(tickBoxWidth/2.0),
+                box.y + tickBoxWidth
+              },
+              {
+                box.x + tickBoxWidth,
+                box.y
+              }, 
+              3,
+              RED);
+  }
+}
+
 } // namespace potato_bucket

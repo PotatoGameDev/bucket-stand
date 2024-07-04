@@ -55,6 +55,23 @@ public:
 };
 
 // ======================================================================
+
+struct PerksScreenSettings {
+};
+
+class PerksScreen : public Screen {
+private:
+  PerksScreenSettings settings;
+  std::vector<std::unique_ptr<PerkButton>> perks;
+  Button *selectedPerk = nullptr;
+
+public:
+  PerksScreen(PerksScreenSettings = {});
+  ScreenFlow update() override;
+  void draw() override;
+};
+
+// ======================================================================
 class SummaryScreen : public Screen {
 private:
 public:

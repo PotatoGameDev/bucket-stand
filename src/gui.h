@@ -14,6 +14,7 @@ class Button {
 private:
 protected:
   int fontSize{20};
+
 public:
   virtual ~Button() = default;
   Button(Vector2, std::string, ScreenFlow);
@@ -33,7 +34,7 @@ public:
 
   Button *update();
   bool pressed();
-  void draw();
+  virtual void draw();
 
   void setFontSize(int);
 
@@ -42,14 +43,25 @@ public:
 
 class CheckButton : public Button {
 private:
-    bool checked{false};
-    std::string checkedText;
-    std::string uncheckedText;
+  bool checked{false};
+  std::string checkedText;
+  std::string uncheckedText;
+
 public:
   CheckButton(Vector2, std::string, std::string);
-    ScreenFlow doAction();
+  ScreenFlow doAction();
 };
 
+class PerkButton : public Button {
+private:
+  bool checked{false};
+  std::string description;
+
+public:
+  PerkButton(Vector2, float, std::string);
+  ScreenFlow doAction();
+  void draw();
+};
 
 } // namespace potato_bucket
 
