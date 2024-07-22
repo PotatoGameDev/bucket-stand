@@ -3,6 +3,7 @@
 #include "matildas.h"
 #include "screenflow.h"
 #include "world.h"
+#include <cstddef>
 #include <cstdlib>
 #include <memory>
 #include <raylib.h>
@@ -52,8 +53,10 @@ MainMenuScreen::MainMenuScreen(MainMenuScreenSettings settings)
                                              ScreenFlow::Credits));
   Button *creditsButton = buttons.back().get();
 
-  //buttons.push_back(std::make_unique<Button>( Vector2{0.5, 0.39}, settings.mainText, ScreenFlow::Introduction));
-  buttons.push_back(std::make_unique<Button>( Vector2{0.5, 0.39}, settings.mainText, ScreenFlow::Perks));
+  // buttons.push_back(std::make_unique<Button>( Vector2{0.5, 0.39},
+  // settings.mainText, ScreenFlow::Introduction));
+  buttons.push_back(std::make_unique<Button>(
+      Vector2{0.5, 0.39}, settings.mainText, ScreenFlow::Perks));
   Button *startButton = buttons.back().get();
   startButton->setFontSize(settings.mainTextSize);
   startButton->fontColor = settings.mainTextColor;
@@ -101,14 +104,18 @@ ScreenFlow MainMenuScreen::update() {
 
   // This handles the keyboard mode:
   if (selectedButton != nullptr) {
-    if (selectedButton->down != nullptr && (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_D) || IsKeyPressed(KEY_J))) {
-        selectedButton->selected = false;
-        selectedButton = selectedButton->down;
-        selectedButton->selected = true;
-    } else if (selectedButton->up != nullptr && (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_E) || IsKeyPressed(KEY_K))) {
-        selectedButton->selected = false;
-        selectedButton = selectedButton->up;
-        selectedButton->selected = true;
+    if (selectedButton->down != nullptr &&
+        (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_D) ||
+         IsKeyPressed(KEY_J))) {
+      selectedButton->selected = false;
+      selectedButton = selectedButton->down;
+      selectedButton->selected = true;
+    } else if (selectedButton->up != nullptr &&
+               (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_E) ||
+                IsKeyPressed(KEY_K))) {
+      selectedButton->selected = false;
+      selectedButton = selectedButton->up;
+      selectedButton->selected = true;
     }
   }
 
@@ -121,28 +128,61 @@ ScreenFlow MainMenuScreen::update() {
 
 void MainMenuScreen::draw() {
   for (auto &butt : buttons) {
-      butt->draw();
+    butt->draw();
   }
 }
 
 // ======================================================================
-//                             PerksScreen 
+//                             PerksScreen
 // ======================================================================
-PerksScreen::PerksScreen(PerksScreenSettings settings)
-    : settings{settings} {
-  perks.push_back(std::make_unique<PerkButton>(Vector2{0.1, 0.2}, 0.45f, "CHAIN REACTION"));
-  PerkButton *test = perks.back().get();
-};
+PerksScreen::PerksScreen(PerksScreenSettings settings) : settings{settings} {
+  std::vector<PerkButton *> addedButtons{};
+
+  std::vector<std::string> perkNames{
+      "CHAIN REACTION", "CHAIN REACTION", "CHAIN REACTION",
+      "CHAIN REACTION", "CHAIN REACTION",
+
+      "CHAIN REACTION", "CHAIN REACTION", "CHAIN REACTION",
+      "CHAIN REACTION", "CHAIN REACTION",
+  };
+
+  std::vector<std::string> perkDescriptions{
+      "CHAIN REACTION", "CHAIN REACTION", "CHAIN REACTION",
+      "CHAIN REACTION", "CHAIN REACTION",
+
+      "CHAIN REACTION", "CHAIN REACTION", "CHAIN REACTION",
+      "CHAIN REACTION", "CHAIN REACTION",
+  };
+
+  /*
+  for (size_t i = 0; i < perkNames.size(); i++) {
+    float c = static_cast<float>(i);
+    perks.push_back(std::make_unique<PerkButton>(
+        Vector2{0.01f + (0.5f * (i % 2)), 0.2f + (c * 0.1f) - (i % 2)*0.1f}, 0.45f,
+        perkNames[c], perkDescriptions[c]));
+    addedButtons.push_back(perks.back().get());
+  }
+
+  for (size_t i = 0; i < addedButtons.size(); i++) {
+      if (i > 0) {
+          addedButtons[i-1]->up = addedButtons[i];
+      }
+      if (i < addedButtons.size() - 1) {
+          addedButtons[i]->down = addedButtons[i+1];
+      }
+  }
+  */
+}
 
 ScreenFlow PerksScreen::update() {
   if (IsKeyPressed(KEY_ESCAPE)) {
-    //return ScreenFlow::Exit;
+    // return ScreenFlow::Exit;
     return ScreenFlow::Repeat;
   }
 
   // This handles the mouse mode:
   for (auto &perk : perks) {
-    Button *newSelected = perk->update();
+    PerkButton *newSelected = static_cast<PerkButton*>(perk->update());
 
     if (newSelected != nullptr) {
       if (selectedPerk != nullptr) {
@@ -159,14 +199,18 @@ ScreenFlow PerksScreen::update() {
 
   // This handles the keyboard mode:
   if (selectedPerk != nullptr) {
-    if (selectedPerk->down != nullptr && (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_D) || IsKeyPressed(KEY_J))) {
-        selectedPerk->selected = false;
-        selectedPerk= selectedPerk->down;
-        selectedPerk->selected = true;
-    } else if (selectedPerk->up != nullptr && (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_E) || IsKeyPressed(KEY_K))) {
-        selectedPerk->selected = false;
-        selectedPerk= selectedPerk->up;
-        selectedPerk->selected = true;
+    if (selectedPerk->down != nullptr &&
+        (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_D) ||
+         IsKeyPressed(KEY_J))) {
+      selectedPerk->selected = false;
+      selectedPerk = static_cast<PerkButton*>(selectedPerk->down);
+      selectedPerk->selected = true;
+    } else if (selectedPerk->up != nullptr &&
+               (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_E) ||
+                IsKeyPressed(KEY_K))) {
+      selectedPerk->selected = false;
+      selectedPerk = static_cast<PerkButton*>(selectedPerk->up);
+      selectedPerk->selected = true;
     }
   }
 
@@ -178,9 +222,38 @@ ScreenFlow PerksScreen::update() {
 }
 
 void PerksScreen::draw() {
-  for (auto &perk: perks) {
-      perk->draw();
+
+    // Draws a border for the available perk counters 
+    float topPanelX = GetScreenWidth() / 4.0f;
+    float topPanelY = 1.0f;
+    float topPanelWidth {GetScreenWidth() * 0.5f};
+    float topPanelHeight {GetScreenHeight() * 0.1f};
+    DrawRectangleLinesEx({topPanelX, topPanelY, topPanelWidth, topPanelHeight}, 2.0, WHITE);
+
+    // Draws available perks:
+    float perkHeight {topPanelHeight - 2};
+    float perkWidth {topPanelWidth/settings.totalAvailablePerks};
+    for (int i = 0; i < settings.totalAvailablePerks; i++) {
+        Color color = GREEN;
+        if (settings.totalAvailablePerks - settings.usedPerks < i) {
+            color = BLACK;
+        }
+        DrawRectangleRec({ topPanelX + i * perkWidth, topPanelY + 1.0f, perkWidth, perkHeight}, color);
+        DrawRectangleLinesEx({ topPanelX + i * perkWidth, topPanelY + 1.0f, perkWidth, perkHeight}, 2.0f, DARKGREEN);
+    }
+    
+  for (auto &perk : perks) {
+    perk->draw();
   }
+
+    // Draws a border for the perk description
+    float descPanelWidth {GetScreenWidth() - 2.0f};
+    float descPanelHeight {GetScreenHeight() * 0.1f};
+    float descPanelX = 0.1;
+    float descPanelY = GetScreenHeight() - descPanelHeight;
+    DrawRectangleLinesEx({descPanelX, descPanelY, descPanelWidth, descPanelHeight}, 2.0, WHITE);
+
+    DrawText(selectedPerk->description.c_str(), descPanelX, descPanelY, 20, WHITE);
 }
 
 // ======================================================================

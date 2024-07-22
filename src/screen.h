@@ -4,14 +4,15 @@
 #include "gui.h"
 #include "raylib.h"
 #include "world.h"
+#include <cwchar>
 #include <memory>
 
 namespace potato_bucket {
 
 struct WorldScreenSettings {};
 
-
 // ======================================================================
+
 class Screen {
 private:
 public:
@@ -57,13 +58,15 @@ public:
 // ======================================================================
 
 struct PerksScreenSettings {
+    int totalAvailablePerks{5};
+    int usedPerks{3};
 };
 
 class PerksScreen : public Screen {
 private:
   PerksScreenSettings settings;
   std::vector<std::unique_ptr<PerkButton>> perks;
-  Button *selectedPerk = nullptr;
+  PerkButton *selectedPerk = nullptr;
 
 public:
   PerksScreen(PerksScreenSettings = {});

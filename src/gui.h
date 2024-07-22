@@ -55,10 +55,11 @@ public:
 class PerkButton : public Button {
 private:
   bool checked{false};
-  std::string description;
 
 public:
-  PerkButton(Vector2, float, std::string);
+  std::string description;
+
+  PerkButton(Vector2, float, std::string, std::string);
   ScreenFlow doAction();
   void draw();
 };
