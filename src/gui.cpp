@@ -85,10 +85,12 @@ ScreenFlow CheckButton::doAction() {
 }
 
 PerkButton::PerkButton(Vector2 positionPercent, float widthPercent, std::string name, std::string description)
-    : Button(positionPercent, description, ScreenFlow::None) {
+    : Button(positionPercent, name, ScreenFlow::None) {
   box = {GetScreenWidth() * positionPercent.x,
          GetScreenHeight() * positionPercent.y, GetScreenWidth() * widthPercent,
          static_cast<float>(this->fontSize + 20)};
+  this->description = description;
+  this->descriptionWidth = MeasureText(description.c_str(), this->fontSize);
 }
 
 ScreenFlow PerkButton::doAction() {
@@ -110,6 +112,11 @@ void PerkButton::draw() {
   float tickBoxWidth = box.height - spacer * 2;
   Rectangle tickBox{box.x + spacer, box.y + spacer, tickBoxWidth, tickBoxWidth};
   DrawRectangleLinesEx(tickBox, 2, fontColor);
+
+  if (this->selected) {
+    DrawRectangleLinesEx(tickBox, 5, fontColor);
+    DrawRectangleLinesEx(box, 5, fontColor);
+  }
 
   DrawText(text.c_str(), box.x + box.width / 2 - textWidth / 2.0,
            box.y + box.height / 2 - fontSize / 2.0, fontSize, fontColor);

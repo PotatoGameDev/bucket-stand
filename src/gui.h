@@ -58,6 +58,7 @@ private:
 
 public:
   std::string description;
+  int descriptionWidth;
 
   PerkButton(Vector2, float, std::string, std::string);
   ScreenFlow doAction();

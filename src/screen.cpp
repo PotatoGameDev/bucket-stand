@@ -8,6 +8,7 @@
 #include <memory>
 #include <raylib.h>
 #include <string>
+#include "logging.h"
 
 namespace potato_bucket {
 
@@ -120,7 +121,9 @@ ScreenFlow MainMenuScreen::update() {
   }
 
   if (IsKeyPressed(KEY_ENTER)) {
-    return selectedButton->doAction();
+    if (selectedButton != nullptr) {
+      return selectedButton->doAction();
+    }
   }
 
   return ScreenFlow::None;
@@ -147,20 +150,23 @@ PerksScreen::PerksScreen(PerksScreenSettings settings) : settings{settings} {
   };
 
   std::vector<std::string> perkDescriptions{
-      "CHAIN REACTION", "CHAIN REACTION", "CHAIN REACTION",
-      "CHAIN REACTION", "CHAIN REACTION",
+      "ITSA CHAIN REACTION 1", "ITSA CHAIN REACTION 2", "ITSA CHAIN REACTION 3",
+      "ITSA CHAIN REACTION 4", "ITSA CHAIN REACTION 5",
 
-      "CHAIN REACTION", "CHAIN REACTION", "CHAIN REACTION",
-      "CHAIN REACTION", "CHAIN REACTION",
+      "ITSA CHAIN REACTION 6", "ITSA CHAIN REACTION 7", "ITSA CHAIN REACTION 8",
+      "ITSA CHAIN REACTION 9", "ITSA CHAIN REACTION 10",
   };
 
-  /*
+  // This calculates perks positions:
+  float yOffset = 0;
   for (size_t i = 0; i < perkNames.size(); i++) {
     float c = static_cast<float>(i);
     perks.push_back(std::make_unique<PerkButton>(
-        Vector2{0.01f + (0.5f * (i % 2)), 0.2f + (c * 0.1f) - (i % 2)*0.1f}, 0.45f,
+        Vector2{0.01f + (0.5f * (i % 2)), 0.2f + (c * 0.1f) - (i % 2)*0.1f - yOffset}, 0.45f,
         perkNames[c], perkDescriptions[c]));
     addedButtons.push_back(perks.back().get());
+
+    yOffset = 0.05f * ((i+1) / 2);
   }
 
   for (size_t i = 0; i < addedButtons.size(); i++) {
@@ -171,7 +177,6 @@ PerksScreen::PerksScreen(PerksScreenSettings settings) : settings{settings} {
           addedButtons[i]->down = addedButtons[i+1];
       }
   }
-  */
 }
 
 ScreenFlow PerksScreen::update() {
@@ -241,10 +246,11 @@ void PerksScreen::draw() {
         DrawRectangleRec({ topPanelX + i * perkWidth, topPanelY + 1.0f, perkWidth, perkHeight}, color);
         DrawRectangleLinesEx({ topPanelX + i * perkWidth, topPanelY + 1.0f, perkWidth, perkHeight}, 2.0f, DARKGREEN);
     }
-    
-  for (auto &perk : perks) {
-    perk->draw();
-  }
+
+
+    for (auto &perk : perks) {
+      perk->draw();
+    }
 
     // Draws a border for the perk description
     float descPanelWidth {GetScreenWidth() - 2.0f};
@@ -253,7 +259,10 @@ void PerksScreen::draw() {
     float descPanelY = GetScreenHeight() - descPanelHeight;
     DrawRectangleLinesEx({descPanelX, descPanelY, descPanelWidth, descPanelHeight}, 2.0, WHITE);
 
-    DrawText(selectedPerk->description.c_str(), descPanelX, descPanelY, 20, WHITE);
+    if (selectedPerk != nullptr) {
+      int descTextSize = 20;
+      DrawText(selectedPerk->description.c_str(), (GetScreenWidth() - selectedPerk->descriptionWidth) / 2.0f, descPanelY + (descPanelHeight / 2) - descTextSize / 2, descTextSize, WHITE);
+    }
 }
 
 // ======================================================================

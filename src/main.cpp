@@ -6,6 +6,7 @@
 #include "world.h"
 #include <memory>
 #include <vector>
+#include "logging.h"
 
 using namespace potato_bucket;
 
@@ -85,6 +86,7 @@ int main() {
       break;
     case ScreenFlow::Perks:
       currentScreen = perksScreen.get();
+      LOG("CHanged to perkd");
       break;
     case ScreenFlow::MainMenu:
       currentScreen = mainMenuScreen.get();
