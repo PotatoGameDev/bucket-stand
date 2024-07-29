@@ -13,21 +13,23 @@ Button::Button(Vector2 positionPercent, std::string text, ScreenFlow action)
 }
 
 Button *Button::update() {
-  if (IsKeyPressed(KEY_DOWN)) {
-    return down;
-  }
-  if (IsKeyPressed(KEY_UP)) {
-    return up;
-  }
-  if (IsKeyPressed(KEY_LEFT)) {
-    return left;
-  }
-  if (IsKeyPressed(KEY_RIGHT)) {
-    return right;
+  if (selected) {
+    if (IsKeyPressed(KEY_DOWN)) {
+      return down;
+    }
+    if (IsKeyPressed(KEY_UP)) {
+      return up;
+    }
+    if (IsKeyPressed(KEY_LEFT)) {
+      return left;
+    }
+    if (IsKeyPressed(KEY_RIGHT)) {
+      return right;
+    }
   }
 
   bool newSelected = CheckCollisionPointRec(GetMousePosition(), box);
-  if (newSelected != selected) {
+  if (newSelected) {
     return this;
   }
 
@@ -84,7 +86,8 @@ ScreenFlow CheckButton::doAction() {
   return action;
 }
 
-PerkButton::PerkButton(Vector2 positionPercent, float widthPercent, std::string name, std::string description)
+PerkButton::PerkButton(Vector2 positionPercent, float widthPercent,
+                       std::string name, std::string description)
     : Button(positionPercent, name, ScreenFlow::None) {
   box = {GetScreenWidth() * positionPercent.x,
          GetScreenHeight() * positionPercent.y, GetScreenWidth() * widthPercent,
@@ -129,6 +132,20 @@ void PerkButton::draw() {
     DrawLineEx(
         {box.x + static_cast<float>(tickBoxWidth / 2.0), box.y + tickBoxWidth},
         {box.x + tickBoxWidth, box.y}, 3, RED);
+  }
+
+  if (this->up != nullptr) {
+    DrawLineEx({box.x + 20, box.y + 20}, {up->box.x, up->box.y}, 2, GREEN);
+  }
+  if (this->down != nullptr) {
+    DrawLineEx({box.x + 20, box.y + 20}, {down->box.x, down->box.y}, 2, RED);
+  }
+  if (this->left != nullptr) {
+    DrawLineEx({box.x + 20, box.y + 20}, {left->box.x, left->box.y}, 2, BLUE);
+  }
+  if (this->right != nullptr) {
+    DrawLineEx({box.x + 20, box.y + 20}, {right->box.x, right->box.y}, 2,
+               YELLOW);
   }
 }
 

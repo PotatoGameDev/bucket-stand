@@ -58,8 +58,8 @@ public:
 // ======================================================================
 
 struct PerksScreenSettings {
-    int totalAvailablePerks{5};
-    int usedPerks{3};
+  int totalAvailablePerks{5};
+  int usedPerks{3};
 };
 
 class PerksScreen : public Screen {
@@ -94,8 +94,9 @@ struct Credit {
 
 class CreditsScreen : public Screen {
 private:
-    std::vector<Credit> credits{};
-    int framesLeft = 60 * 10;
+  std::vector<Credit> credits{};
+  int framesLeft = 60 * 10;
+
 public:
   WorldResult result{};
   CreditsScreen();
