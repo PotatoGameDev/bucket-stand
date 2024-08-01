@@ -6,11 +6,11 @@ namespace potato_bucket {
 
 enum Perk {
   // Postive perks:
-  CHAIN_REACTION,    // Player bullets split into 2 smaller ones when they hit
-                     // enemy bullets
+  CHAIN_REACTION, // Player bullets split into 2 smaller ones when they hit
+                  // enemy bullets
+
+  ONLY_BACKWARDS,    // Player can only walk backwards
   BULLET_CONVERSION, // Player bullets turn enemy bullets into player bullets
-  // Negative perks:
-  ONLY_BACKWARDS, // Player can only walk backwards
 
   PERKS_COUNT
 };
@@ -18,12 +18,13 @@ enum Perk {
 class GameState {
 private:
   std::bitset<PERKS_COUNT> perks;
+  int gainedPerkPoints{0};
 
 public:
   bool getPerk(Perk);
   void setPerk(Perk, bool);
   void flipPerk(Perk);
-  int getPerksUsed();
+  int getAvailablePerkPoints();
 };
 } // namespace potato_bucket
 

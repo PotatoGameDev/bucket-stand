@@ -1,7 +1,6 @@
 #include "screen.h"
 #include "gamestate.h"
 #include "gui.h"
-#include "logging.h"
 #include "matildas.h"
 #include "screenflow.h"
 #include "world.h"
@@ -143,24 +142,22 @@ PerksScreen::PerksScreen(const std::shared_ptr<GameState> &gameState)
     : gameState{gameState} {
   std::vector<std::string> perkNames{
       "CHAIN REACTION",
-      "STEAL BULLETS",
       "BACKWARDS",
+      "STEAL BULLETS",
   };
 
   std::vector<std::string> perkDescriptions{
       "PLAYER BULLETS SPLIT IN TWO SMALLER WHEN THEY HIT ENEMY BULLETS",
-      "PLAYER BULLETS CONVERT ENEMY BULLETS INTO PLAYER BULLETS",
       "PLAYER CAN ONLY WALK BACKWARDS",
+      "PLAYER BULLETS CONVERT ENEMY BULLETS INTO PLAYER BULLETS",
   };
 
   // This calculates perks positions:
   float yOffset = 0;
   for (size_t i = 0; i < PERKS_COUNT; i++) {
     float c = static_cast<float>(i);
-    Perk p = static_cast<Perk>(i);
-    LOG(p);
     perks.push_back(std::make_unique<PerkButton>(
-        p,
+        static_cast<Perk>(i),
         Vector2{0.01f + (0.5f * (i % 2)),
                 0.2f + (c * 0.1f) - (i % 2) * 0.1f - yOffset},
         0.45f, perkNames[c], perkDescriptions[c], gameState));
@@ -231,11 +228,12 @@ void PerksScreen::draw() {
                        2.0, WHITE);
 
   // Draws available perks:
+  int slotsCount = 10; // TODO: Deal with the magic num
   float perkHeight{topPanelHeight - 2};
-  float perkWidth{topPanelWidth / PERKS_COUNT};
-  for (int i = 0; i < PERKS_COUNT; i++) {
+  float perkWidth{topPanelWidth / slotsCount};
+  for (int i = 0; i < slotsCount; i++) {
     Color color = GREEN;
-    if (PERKS_COUNT - gameState->getPerksUsed() < i + 1) {
+    if (gameState->getAvailablePerkPoints() < i + 1) {
       color = BLACK;
     }
     DrawRectangleRec(
