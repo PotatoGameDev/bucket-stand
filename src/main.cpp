@@ -1,4 +1,6 @@
 #include "audio_manager.h"
+#include "gamestate.h"
+#include "logging.h"
 #include "matildas.h"
 #include "raylib.h"
 #include "screen.h"
@@ -6,7 +8,6 @@
 #include "world.h"
 #include <memory>
 #include <vector>
-#include "logging.h"
 
 using namespace potato_bucket;
 
@@ -20,6 +21,8 @@ int main() {
 
   InitAudioDevice();
 
+  std::shared_ptr<GameState> gameState = std::make_shared<GameState>();
+
   std::vector<WorldSettings> levels;
 
   levels.emplace_back(3, "Mansfield", "Euroa");
@@ -30,11 +33,12 @@ int main() {
 
   std::unique_ptr<WorldScreen> worldScreen = std::make_unique<WorldScreen>();
 
-  // Move to some text based config file or something, for translations or stuff...
+  // Move to some text based config file or something, for translations or
+  // stuff...
   MainMenuScreenSettings mainMenuScreenSettings{
-    50,
-    "DEPRESS [ENTER] TO PLAY",
-    WHITE,
+      50,
+      "DEPRESS [ENTER] TO PLAY",
+      WHITE,
   };
 
   std::unique_ptr<MainMenuScreen> mainMenuScreen =
@@ -42,7 +46,7 @@ int main() {
   std::unique_ptr<SummaryScreen> summaryScreen =
       std::make_unique<SummaryScreen>();
   std::unique_ptr<PerksScreen> perksScreen =
-      std::make_unique<PerksScreen>();
+      std::make_unique<PerksScreen>(gameState);
   std::unique_ptr<CreditsScreen> creditsScreen =
       std::make_unique<CreditsScreen>();
 

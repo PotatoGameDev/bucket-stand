@@ -1,6 +1,7 @@
 #ifndef POTATO_BUCKET_SCREEN_H
 #define POTATO_BUCKET_SCREEN_H
 
+#include "gamestate.h"
 #include "gui.h"
 #include "raylib.h"
 #include "world.h"
@@ -57,19 +58,14 @@ public:
 
 // ======================================================================
 
-struct PerksScreenSettings {
-  int totalAvailablePerks{5};
-  int usedPerks{3};
-};
-
 class PerksScreen : public Screen {
 private:
-  PerksScreenSettings settings;
   std::vector<std::unique_ptr<PerkButton>> perks;
   PerkButton *selectedPerk = nullptr;
+  const std::shared_ptr<GameState> &gameState;
 
 public:
-  PerksScreen(PerksScreenSettings = {});
+  PerksScreen(const std::shared_ptr<GameState> &);
   ScreenFlow update() override;
   void draw() override;
 };

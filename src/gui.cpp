@@ -1,5 +1,5 @@
-
 #include "gui.h"
+#include "gamestate.h"
 #include "screenflow.h"
 #include <raylib.h>
 #include <string>
@@ -86,9 +86,11 @@ ScreenFlow CheckButton::doAction() {
   return action;
 }
 
-PerkButton::PerkButton(Vector2 positionPercent, float widthPercent,
-                       std::string name, std::string description)
-    : Button(positionPercent, name, ScreenFlow::None) {
+PerkButton::PerkButton(Perk perk, Vector2 positionPercent, float widthPercent,
+                       std::string name, std::string description,
+                       const std::shared_ptr<GameState> &gameState)
+    : Button(positionPercent, name, ScreenFlow::None), gameState{gameState} {
+
   box = {GetScreenWidth() * positionPercent.x,
          GetScreenHeight() * positionPercent.y, GetScreenWidth() * widthPercent,
          static_cast<float>(this->fontSize + 20)};
@@ -99,11 +101,7 @@ PerkButton::PerkButton(Vector2 positionPercent, float widthPercent,
 ScreenFlow PerkButton::doAction() {
   checked = !checked;
 
-  if (checked) {
-    // TODO Activate some perk or somethin
-  } else {
-    // TODO Deactivate some perk or somethin
-  }
+  gameState->setPerk(perk, checked);
 
   return action;
 }

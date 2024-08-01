@@ -34,7 +34,7 @@ World::World(unsigned int worldSeed, WorldSettings settings)
   srand(worldSeed);
 
   objects.emplace_back(player.box.x, player.box.y, "tree.png");
-/*
+
   for (int i{-GetScreenWidth() - 50}; i < GetScreenWidth() + 50; i += 20) {
     int bushNo = rand() % 3;
     objects.emplace_back(i, GetScreenHeight(),
@@ -51,8 +51,6 @@ World::World(unsigned int worldSeed, WorldSettings settings)
     objects.emplace_back(-GetScreenWidth(), i,
                          "bush" + std::to_string(bushNo) + ".png");
   }
-
-  */
 
   backgnd = TextureCache::Instance().load("sand.png");
 }
@@ -176,7 +174,6 @@ WorldFlow World::update() {
 
     int enemType = rand() % 2;
 
-
     if (enemType == 0) {
       enemies.push_back(
           std::make_unique<Sheriff>(enemyBox, Anim{"enemy.png", 6}));
@@ -184,9 +181,7 @@ WorldFlow World::update() {
       enemies.push_back(
           std::make_unique<Spider>(enemyBox, Anim{"spider.png", 6}, 1));
     }
-
   }
-
 
   // ========================================================
   // ======================== POST ==========================
@@ -203,7 +198,8 @@ WorldFlow World::update() {
 }
 
 void PrintRectum(const Rectangle &rect) {
-  LOG("Rectangle(", rect.x, ", ", rect.y, ", ", rect.width, ", ", rect.height, ")");
+  LOG("Rectangle(", rect.x, ", ", rect.y, ", ", rect.width, ", ", rect.height,
+      ")");
 }
 
 void PrintVectorum(const Vector2 &vect) {

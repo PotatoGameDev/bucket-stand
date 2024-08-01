@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "gamestate.h"
 #include "gui.h"
 #include "logging.h"
 #include "matildas.h"
@@ -138,39 +139,36 @@ void MainMenuScreen::draw() {
 // ======================================================================
 //                             PerksScreen
 // ======================================================================
-PerksScreen::PerksScreen(PerksScreenSettings settings) : settings{settings} {
+PerksScreen::PerksScreen(const std::shared_ptr<GameState> &gameState)
+    : gameState{gameState} {
   std::vector<std::string> perkNames{
-      "CHAIN REACTION", "CHAIN REACTION", "CHAIN REACTION",
-      "CHAIN REACTION", "CHAIN REACTION",
-
-      "CHAIN REACTION", "CHAIN REACTION", "CHAIN REACTION",
-      "CHAIN REACTION", "CHAIN REACTION",
+      "CHAIN REACTION",
+      "STEAL BULLETS",
+      "BACKWARDS",
   };
 
   std::vector<std::string> perkDescriptions{
-      "ITSA CHAIN REACTION 1",  "ITSA CHAIN REACTION 2",
-      "ITSA CHAIN REACTION 3",  "ITSA CHAIN REACTION 4",
-      "ITSA CHAIN REACTION 5",
-
-      "ITSA CHAIN REACTION 6",  "ITSA CHAIN REACTION 7",
-      "ITSA CHAIN REACTION 8",  "ITSA CHAIN REACTION 9",
-      "ITSA CHAIN REACTION 10",
+      "PLAYER BULLETS SPLIT IN TWO SMALLER WHEN THEY HIT ENEMY BULLETS",
+      "PLAYER BULLETS CONVERT ENEMY BULLETS INTO PLAYER BULLETS",
+      "PLAYER CAN ONLY WALK BACKWARDS",
   };
 
   // This calculates perks positions:
   float yOffset = 0;
-  for (size_t i = 0; i < perkNames.size(); i++) {
+  for (size_t i = 0; i < PERKS_COUNT; i++) {
     float c = static_cast<float>(i);
+    Perk p = static_cast<Perk>(i);
     perks.push_back(std::make_unique<PerkButton>(
+        p,
         Vector2{0.01f + (0.5f * (i % 2)),
                 0.2f + (c * 0.1f) - (i % 2) * 0.1f - yOffset},
-        0.45f, perkNames[c], perkDescriptions[c]));
+        0.45f, perkNames[c], perkDescriptions[c], gameState));
     auto lastAdded = perks.back().get();
 
     yOffset = 0.05f * static_cast<int>((i + 1) / 2);
   }
 
-  for (size_t i = 0; i < perkNames.size(); i++) {
+  for (size_t i = 0; i < PERKS_COUNT; i++) {
     if (i > 1) {
       perks[i]->up = perks[i - 2].get();
     }
@@ -233,10 +231,10 @@ void PerksScreen::draw() {
 
   // Draws available perks:
   float perkHeight{topPanelHeight - 2};
-  float perkWidth{topPanelWidth / settings.totalAvailablePerks};
-  for (int i = 0; i < settings.totalAvailablePerks; i++) {
+  float perkWidth{topPanelWidth / PERKS_COUNT};
+  for (int i = 0; i < PERKS_COUNT; i++) {
     Color color = GREEN;
-    if (settings.totalAvailablePerks - settings.usedPerks < i) {
+    if (gameState->getPerksUsed() < i + 1) {
       color = BLACK;
     }
     DrawRectangleRec(

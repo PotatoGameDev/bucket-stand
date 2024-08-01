@@ -26,7 +26,7 @@ if (NOT raylib_FOUND) # If there's none, fetch and build raylib
 endif()
 
 # Our Project
-add_executable(${PROJECT_NAME} src/main.cpp src/player.cpp src/world.cpp src/camera.cpp src/object.cpp src/anim.cpp src/bullet.cpp src/enemy.cpp src/texture_cache.cpp src/screen.cpp src/audio_manager.cpp src/matildas.cpp src/gui.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/player.cpp src/world.cpp src/camera.cpp src/object.cpp src/anim.cpp src/bullet.cpp src/enemy.cpp src/texture_cache.cpp src/screen.cpp src/audio_manager.cpp src/matildas.cpp src/gui.cpp src/gamestate.cpp)
 add_subdirectory(src)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

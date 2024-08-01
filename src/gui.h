@@ -1,8 +1,10 @@
 #ifndef POTATO_BUCKET_GUI_H
 #define POTATO_BUCKET_GUI_H
 
+#include "gamestate.h"
 #include "raylib.h"
 #include "screenflow.h"
+#include <memory>
 #include <raymath.h>
 #include <string>
 
@@ -55,12 +57,15 @@ public:
 class PerkButton : public Button {
 private:
   bool checked{false};
+  const std::shared_ptr<GameState> &gameState;
+  Perk perk;
 
 public:
   std::string description;
   int descriptionWidth;
 
-  PerkButton(Vector2, float, std::string, std::string);
+  PerkButton(Perk, Vector2, float, std::string, std::string,
+             const std::shared_ptr<GameState> &);
   ScreenFlow doAction();
   void draw();
 };
