@@ -89,7 +89,8 @@ ScreenFlow CheckButton::doAction() {
 PerkButton::PerkButton(Perk perk, Vector2 positionPercent, float widthPercent,
                        std::string name, std::string description,
                        const std::shared_ptr<GameState> &gameState)
-    : Button(positionPercent, name, ScreenFlow::None), gameState{gameState} {
+    : Button(positionPercent, name, ScreenFlow::None), gameState{gameState},
+      perk{perk} {
 
   box = {GetScreenWidth() * positionPercent.x,
          GetScreenHeight() * positionPercent.y, GetScreenWidth() * widthPercent,
@@ -99,9 +100,7 @@ PerkButton::PerkButton(Perk perk, Vector2 positionPercent, float widthPercent,
 }
 
 ScreenFlow PerkButton::doAction() {
-  checked = !checked;
-
-  gameState->setPerk(perk, checked);
+  gameState->flipPerk(perk);
 
   return action;
 }
@@ -122,7 +121,7 @@ void PerkButton::draw() {
   DrawText(text.c_str(), box.x + box.width / 2 - textWidth / 2.0,
            box.y + box.height / 2 - fontSize / 2.0, fontSize, fontColor);
 
-  if (checked) {
+  if (gameState->getPerk(perk)) {
     DrawLineEx(
         {box.x, box.y + static_cast<float>(tickBoxWidth / 2.0)},
         {box.x + static_cast<float>(tickBoxWidth / 2.0), box.y + tickBoxWidth},

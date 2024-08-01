@@ -158,6 +158,7 @@ PerksScreen::PerksScreen(const std::shared_ptr<GameState> &gameState)
   for (size_t i = 0; i < PERKS_COUNT; i++) {
     float c = static_cast<float>(i);
     Perk p = static_cast<Perk>(i);
+    LOG(p);
     perks.push_back(std::make_unique<PerkButton>(
         p,
         Vector2{0.01f + (0.5f * (i % 2)),
@@ -234,7 +235,7 @@ void PerksScreen::draw() {
   float perkWidth{topPanelWidth / PERKS_COUNT};
   for (int i = 0; i < PERKS_COUNT; i++) {
     Color color = GREEN;
-    if (gameState->getPerksUsed() < i + 1) {
+    if (PERKS_COUNT - gameState->getPerksUsed() < i + 1) {
       color = BLACK;
     }
     DrawRectangleRec(
@@ -261,7 +262,7 @@ void PerksScreen::draw() {
     int descTextSize = 20;
     DrawText(selectedPerk->description.c_str(),
              (GetScreenWidth() - selectedPerk->descriptionWidth) / 2.0f,
-             descPanelY + (descPanelHeight / 2) - descTextSize / 2,
+             descPanelY + (descPanelHeight / 2.0f) - descTextSize / 2.0f,
              descTextSize, WHITE);
   }
 }

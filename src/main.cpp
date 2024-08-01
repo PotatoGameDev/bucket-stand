@@ -90,7 +90,6 @@ int main() {
       break;
     case ScreenFlow::Perks:
       currentScreen = perksScreen.get();
-      LOG("CHanged to perkd");
       break;
     case ScreenFlow::MainMenu:
       currentScreen = mainMenuScreen.get();

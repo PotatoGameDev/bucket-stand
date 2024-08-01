@@ -56,7 +56,6 @@ public:
 
 class PerkButton : public Button {
 private:
-  bool checked{false};
   const std::shared_ptr<GameState> &gameState;
   Perk perk;
 
