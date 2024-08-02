@@ -15,10 +15,11 @@ namespace potato_bucket {
 // ======================================================================
 //                             WorldScreen
 // ======================================================================
-WorldScreen::WorldScreen() {}
+WorldScreen::WorldScreen(const std::shared_ptr<GameState> &gameState)
+    : gameState{gameState} {}
 
 ScreenFlow WorldScreen::update() {
-  WorldFlow result = world.update();
+  WorldFlow result = world->update();
 
   if (result == WorldFlow::Win) {
     return ScreenFlow::Perks;
@@ -35,15 +36,15 @@ ScreenFlow WorldScreen::update() {
   return ScreenFlow::None;
 }
 
-WorldResult WorldScreen::result() { return world.result(); }
+WorldResult WorldScreen::result() { return world->result(); }
 
 void WorldScreen::start(WorldSettings settings) {
-  world = {0, settings};
+  world.emplace(0, gameState);
 
   Matildas::Instance().giveMeNextOne();
 }
 
-void WorldScreen::draw() { world.draw(); }
+void WorldScreen::draw() { world->draw(); }
 
 // ======================================================================
 //                              MainMenuScreen

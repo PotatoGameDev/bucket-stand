@@ -1,6 +1,5 @@
 #include "audio_manager.h"
 #include "gamestate.h"
-#include "logging.h"
 #include "matildas.h"
 #include "raylib.h"
 #include "screen.h"
@@ -31,7 +30,8 @@ int main() {
   levels.emplace_back(30, "Greta", "Glenrowan");
   levels.emplace_back(100, "Glenrowan", "");
 
-  std::unique_ptr<WorldScreen> worldScreen = std::make_unique<WorldScreen>();
+  std::unique_ptr<WorldScreen> worldScreen =
+      std::make_unique<WorldScreen>(gameState);
 
   // Move to some text based config file or something, for translations or
   // stuff...

@@ -3,6 +3,7 @@
 
 #include "bullet.h"
 #include "enemy.h"
+#include "gamestate.h"
 #include "object.h"
 #include "player.h"
 #include "raylib.h"
@@ -15,20 +16,20 @@ namespace potato_bucket {
 enum class WorldFlow { None, Win, Lose };
 
 struct WorldSettings {
-    int winCondition{1};
-    std::string location;
-    std::string nextLocation;
+  int winCondition{1};
+  std::string location;
+  std::string nextLocation;
 
-    WorldSettings() = default;
-    WorldSettings(int, std::string, std::string);
+  WorldSettings() = default;
+  WorldSettings(int, std::string, std::string);
 };
 
 struct WorldResult {
-    int killed{};
-    bool win{};
-    std::string location;
-    std::string nextLocation;
-    bool intro {false};
+  int killed{};
+  bool win{};
+  std::string location;
+  std::string nextLocation;
+  bool intro{false};
 };
 
 class World {
@@ -38,22 +39,25 @@ private:
   std::vector<Bullet> bullets{};
   std::vector<std::unique_ptr<Enemy>> enemies{};
   int frameNo{};
-  WorldSettings settings;
+  const std::shared_ptr<GameState> &gameState;
 
 public:
   Player player;
   Camera2D camera;
+  WorldSettings settings;
 
-  World();
-  World(unsigned int, WorldSettings settings = {});
+  ~World() = default;
+  World(unsigned int, const std::shared_ptr<GameState> &);
+
+  World &operator=(const World &other) = default;
 
   WorldFlow update();
   void draw();
   WorldResult result();
 };
 
-void PrintRectum(const Rectangle&);
-void PrintVectorum(const Vector2&);
+void PrintRectum(const Rectangle &);
+void PrintVectorum(const Vector2 &);
 
 } // namespace potato_bucket
 

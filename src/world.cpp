@@ -6,7 +6,6 @@
 #include "player.h"
 #include "texture_cache.h"
 #include <cstdlib>
-#include <iostream>
 #include <memory>
 #include <raylib.h>
 #include <raymath.h>
@@ -19,10 +18,9 @@ WorldSettings::WorldSettings(int winCondition, std::string location,
     : winCondition{winCondition}, location{location},
       nextLocation{nextLocation} {}
 
-World::World() : camera{0}, settings{}, player{0.0, 0.0, {}} {}
-
-World::World(unsigned int worldSeed, WorldSettings settings)
-    : player{0.0, 0.0, {500.f, 2.0f, 30}}, camera{0}, settings{settings} {
+World::World(unsigned int worldSeed,
+             const std::shared_ptr<GameState> &gameState)
+    : player{0.0, 0.0, {500.f, 2.0f, 30}}, camera{0}, gameState{gameState} {
   float screenWidth = GetScreenWidth();
   float screenHeight = GetScreenHeight();
 

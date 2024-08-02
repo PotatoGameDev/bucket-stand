@@ -7,6 +7,7 @@
 #include "world.h"
 #include <cwchar>
 #include <memory>
+#include <optional>
 
 namespace potato_bucket {
 
@@ -26,10 +27,11 @@ public:
 // ======================================================================
 class WorldScreen : public Screen {
 private:
-  World world{};
+  std::optional<World> world;
+  const std::shared_ptr<GameState> &gameState;
 
 public:
-  WorldScreen();
+  WorldScreen(const std::shared_ptr<GameState> &);
   ScreenFlow update();
   void draw();
   WorldResult result();
