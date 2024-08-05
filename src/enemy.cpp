@@ -2,18 +2,17 @@
 #include "anim.h"
 #include "audio_manager.h"
 #include "raymath.h"
+#include "world.h"
 #include <raylib.h>
 #include <string>
 
 namespace potato_bucket {
 
-void Enemy::draw() {
-  anim.draw(Vector2{box.x, box.y}, box, scale);
-}
+void Enemy::draw() { anim.draw(Vector2{box.x, box.y}, box, scale); }
 
-Enemy::Enemy(Vector2 position, Anim anim)
+Enemy::Enemy(Vector2 position, Anim anim, World &world)
     : box{position.x, position.y, 0.0, 0.0}, anim{std::move(anim)},
-      scale{1.0, 1.0}, velocity{0.0, 0.0} {
+      scale{1.0, 1.0}, velocity{0.0, 0.0}, world(world) {
   box.width = anim.width;
   box.height = anim.height;
 }
@@ -21,9 +20,9 @@ Enemy::Enemy(Vector2 position, Anim anim)
 Enemy::Enemy(Enemy &&other) noexcept
     : box{other.box}, anim(std::move(other.anim)), scale{other.scale},
       velocity{other.velocity}, lastNonZeroVelocity{other.lastNonZeroVelocity},
-      maxSpeed{other.maxSpeed} { }
+      maxSpeed{other.maxSpeed}, world(other.world) {}
 
-Enemy &Enemy::operator=(Enemy&&other) noexcept {
+Enemy &Enemy::operator=(Enemy &&other) noexcept {
   if (this != &other) {
     anim = std::move(other.anim);
     maxSpeed = other.maxSpeed;
@@ -39,10 +38,10 @@ Enemy &Enemy::operator=(Enemy&&other) noexcept {
 // =================== Sheriff ========================
 // ====================================================
 
+Sheriff::Sheriff(Vector2 position, Anim anim, World &world)
+    : Enemy(position, std::move(anim), world) {}
 
-Sheriff::Sheriff(Vector2 position, Anim anim) : Enemy(position, std::move(anim)) {}
-
-void Sheriff::update(Player &player, int frameNo, std::vector<Bullet> &bullets) {
+void Sheriff::update(Player &player, int frameNo) {
   Vector2 playerPos{player.box.x, player.box.y};
   Vector2 enemyPos{box.x, box.y};
 
@@ -63,11 +62,11 @@ void Sheriff::update(Player &player, int frameNo, std::vector<Bullet> &bullets) 
   retreatThreshold *= retreatThreshold;
 
   if (distance < stopThreshold) {
-      if (distance < retreatThreshold) {
-        velocity = Vector2Scale(velocity, -1);
-      } else {
-        velocity = Vector2Zero();
-      }
+    if (distance < retreatThreshold) {
+      velocity = Vector2Scale(velocity, -1);
+    } else {
+      velocity = Vector2Zero();
+    }
   }
 
   box.x += velocity.x;
@@ -79,7 +78,7 @@ void Sheriff::update(Player &player, int frameNo, std::vector<Bullet> &bullets) 
 
   // Generate bullets
   if (frameNo % (1 * 60) == 0) {
-    Rectangle brec{box.x + box.width / 2, box.y + box.height / 2, 6.0f, 4.0f};
+    Vector2 bulletPosition{box.x + box.width / 2.0f, box.y + box.height / 2.0f};
     float signX = (scale.x < 0.0 ? -1.0 : 1.0);
     float signY = (scale.y < 0.0 ? -1.0 : 1.0);
 
@@ -87,7 +86,7 @@ void Sheriff::update(Player &player, int frameNo, std::vector<Bullet> &bullets) 
     Vector2 bvel =
         Vector2Add(velocity, Vector2Scale(Vector2Normalize(lastNonZeroVelocity),
                                           bulletSpeed));
-    bullets.emplace_back(brec, bvel, 5);
+    world.addBullet(bulletPosition, bvel, 5, false);
     AudioMan::Instance().play("shoot.wav", playerPos, enemyPos);
   }
 
@@ -98,10 +97,10 @@ void Sheriff::update(Player &player, int frameNo, std::vector<Bullet> &bullets) 
 // ==================== Spider ========================
 // ====================================================
 
+Spider::Spider(Vector2 position, Anim anim, int bitePower, World &world)
+    : Enemy(position, std::move(anim), world), bitePower{bitePower} {}
 
-Spider::Spider(Vector2 position, Anim anim, int bitePower) : Enemy(position, std::move(anim)), bitePower{bitePower} {}
-
-void Spider::update(Player &player, int frameNo, std::vector<Bullet> &bullets) {
+void Spider::update(Player &player, int frameNo) {
   Vector2 playerPos{player.box.x, player.box.y};
   Vector2 enemyPos{box.x, box.y};
 

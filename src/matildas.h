@@ -2,8 +2,6 @@
 #define POTATO_BUCKET_MATILDAS_H
 
 #include "raylib.h"
-#include <map>
-#include <string>
 #include <vector>
 
 namespace potato_bucket {

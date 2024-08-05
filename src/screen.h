@@ -62,8 +62,8 @@ public:
 
 class PerksScreen : public Screen {
 private:
-  std::vector<std::unique_ptr<PerkButton>> perks;
-  PerkButton *selectedPerk = nullptr;
+  std::vector<std::unique_ptr<Button>> perks;
+  Button *selectedButton = nullptr;
   const std::shared_ptr<GameState> &gameState;
 
 public:

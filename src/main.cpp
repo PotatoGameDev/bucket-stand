@@ -1,4 +1,5 @@
 #include "audio_manager.h"
+#include "enemy.h"
 #include "gamestate.h"
 #include "matildas.h"
 #include "raylib.h"

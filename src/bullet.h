@@ -1,10 +1,7 @@
 #ifndef POTATO_BUCKET_BULLET_H
 #define POTATO_BUCKET_BULLET_H
 
-#include "anim.h"
 #include "raylib.h"
-#include <string>
-#include <vector>
 
 namespace potato_bucket {
 
@@ -13,12 +10,15 @@ private:
   int timeToLive{};
 
 public:
-  Rectangle box;
+  Vector2 position;
   Vector2 velocity;
+
+  int size;
+  Rectangle box;
   bool playerBullet{false};
 
-  Bullet(float, float, float, float, Vector2, int = 1, bool = false);
-  Bullet(Rectangle, Vector2, int = 1, bool = false);
+  Bullet(float, float, Vector2, int = 1, int = 6, bool = false);
+  Bullet(Vector2, Vector2, int = 1, int = 6, bool = false);
 
   void update();
   void draw() const;

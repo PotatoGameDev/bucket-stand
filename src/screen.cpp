@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "enemy.h"
 #include "gamestate.h"
 #include "gui.h"
 #include "matildas.h"
@@ -167,6 +168,10 @@ PerksScreen::PerksScreen(const std::shared_ptr<GameState> &gameState)
     yOffset = 0.05f * static_cast<int>((i + 1) / 2);
   }
 
+  // TODO Fix the screen flows
+  perks.push_back(
+      std::make_unique<Button>(Vector2{0.5, 0.9}, "PLAY", ScreenFlow::Repeat));
+
   for (size_t i = 0; i < PERKS_COUNT; i++) {
     if (i > 1) {
       perks[i]->up = perks[i - 2].get();
@@ -189,33 +194,35 @@ ScreenFlow PerksScreen::update() {
     return ScreenFlow::Repeat;
   }
 
+  ScreenFlow result = ScreenFlow::None;
+
   // This handles the mouse mode:
-  PerkButton *newSelected = nullptr;
+  Button *newSelected = nullptr;
   for (auto &perk : perks) {
-    PerkButton *updateResult = static_cast<PerkButton *>(perk->update());
+    Button *updateResult = static_cast<Button *>(perk->update());
 
     if (updateResult != nullptr) {
       newSelected = updateResult;
     }
 
     if (perk->pressed()) {
-      perk->doAction();
+      result = perk->doAction();
     }
   }
 
   if (newSelected != nullptr) {
-    if (selectedPerk != nullptr) {
-      selectedPerk->selected = false;
+    if (selectedButton != nullptr) {
+      selectedButton->selected = false;
     }
-    selectedPerk = newSelected;
-    selectedPerk->selected = true;
+    selectedButton = newSelected;
+    selectedButton->selected = true;
   }
 
   if (IsKeyPressed(KEY_ENTER)) {
-    selectedPerk->doAction();
+    result = selectedButton->doAction();
   }
 
-  return ScreenFlow::None;
+  return result;
 }
 
 void PerksScreen::draw() {
@@ -257,12 +264,14 @@ void PerksScreen::draw() {
   DrawRectangleLinesEx(
       {descPanelX, descPanelY, descPanelWidth, descPanelHeight}, 2.0, WHITE);
 
-  if (selectedPerk != nullptr) {
+  if (selectedButton != nullptr) {
     int descTextSize = 20;
-    DrawText(selectedPerk->description.c_str(),
-             (GetScreenWidth() - selectedPerk->descriptionWidth) / 2.0f,
-             descPanelY + (descPanelHeight / 2.0f) - descTextSize / 2.0f,
-             descTextSize, WHITE);
+    if (auto selectedPerk = dynamic_cast<PerkButton *>(selectedButton)) {
+      DrawText(selectedPerk->description.c_str(),
+               (GetScreenWidth() - selectedPerk->descriptionWidth) / 2.0f,
+               descPanelY + (descPanelHeight / 2.0f) - descTextSize / 2.0f,
+               descTextSize, WHITE);
+    }
   }
 }
 

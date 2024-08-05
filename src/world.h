@@ -2,7 +2,6 @@
 #define POTATO_BUCKET_WORLD_H
 
 #include "bullet.h"
-#include "enemy.h"
 #include "gamestate.h"
 #include "object.h"
 #include "player.h"
@@ -12,6 +11,8 @@
 #include <vector>
 
 namespace potato_bucket {
+
+class Enemy;
 
 enum class WorldFlow { None, Win, Lose };
 
@@ -49,8 +50,7 @@ public:
   ~World() = default;
   World(unsigned int, const std::shared_ptr<GameState> &);
 
-  World &operator=(const World &other) = default;
-
+  void addBullet(Vector2, Vector2, float, bool);
   WorldFlow update();
   void draw();
   WorldResult result();

@@ -59,6 +59,8 @@ WorldFlow World::update() {
   // ========================================================
   // ===================== COLLISIONS =======================
   // ========================================================
+  std::vector<Bullet> newBullets{};
+
   for (auto bu = bullets.begin(); bu != bullets.end();) {
     bu->update();
 
@@ -95,6 +97,7 @@ WorldFlow World::update() {
     }
 
     // =================== BULLET - BULLET ======================
+
     for (auto ob = bullets.begin(); ob != bullets.end();) {
       if (bu == ob) {
         ob++;
@@ -106,7 +109,24 @@ WorldFlow World::update() {
         bu->bounce(obVel);
         ob->bounce(buVel);
 
-        if (bu->playerBullet || ob->playerBullet) {
+        if (gameState->getPerk(Perk::CHAIN_REACTION)) {
+          // TODO: Make bullets shrink
+          if (!bu->playerBullet) {
+            Vector2 bulletPosition{bu->position.x + bu->size / 2.0f,
+                                   bu->position.y + bu->size / 2.0f};
+
+            addBullet(bulletPosition, Vector2Scale(bu->velocity, -1), 5, true);
+          }
+          if (!ob->playerBullet) {
+            Vector2 bulletPosition{ob->position.x + ob->size / 2.0f,
+                                   ob->position.y + ob->size / 2.0f};
+
+            addBullet(bulletPosition, Vector2Scale(ob->velocity, -1), 5, true);
+          }
+        }
+
+        if (gameState->getPerk(Perk::BULLET_CONVERSION) &&
+            (bu->playerBullet || ob->playerBullet)) {
           bu->playerBullet = true;
           ob->playerBullet = true;
         }
@@ -117,6 +137,8 @@ WorldFlow World::update() {
 
     bu++;
   }
+
+  bullets.insert(bullets.end(), newBullets.begin(), newBullets.end());
 
   // ========================================================
   // ======================= UPDATE =========================
@@ -129,7 +151,7 @@ WorldFlow World::update() {
 
   // =================== ENEMIES ======================
   for (auto &e : enemies) {
-    e->update(player, frameNo, bullets);
+    e->update(player, frameNo);
   }
 
   // =================== PLAYER ======================
@@ -174,10 +196,10 @@ WorldFlow World::update() {
 
     if (enemType == 0) {
       enemies.push_back(
-          std::make_unique<Sheriff>(enemyBox, Anim{"enemy.png", 6}));
+          std::make_unique<Sheriff>(enemyBox, Anim{"enemy.png", 6}, *this));
     } else if (enemType == 1) {
       enemies.push_back(
-          std::make_unique<Spider>(enemyBox, Anim{"spider.png", 6}, 1));
+          std::make_unique<Spider>(enemyBox, Anim{"spider.png", 6}, 1, *this));
     }
   }
 
@@ -262,5 +284,10 @@ void World::draw() {
       {static_cast<float>(GetScreenWidth()) / 2 - player.currentLife / 2, 40,
        player.currentLife, 10},
       lifeColor);
+}
+
+void World::addBullet(Vector2 bulletPosition, Vector2 velocity, float size,
+                      bool playerBullet) {
+  bullets.emplace_back(bulletPosition, velocity, size, playerBullet);
 }
 } // namespace potato_bucket
