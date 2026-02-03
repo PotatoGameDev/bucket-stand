@@ -115,13 +115,13 @@ WorldFlow World::update() {
             Vector2 bulletPosition{bu->position.x + bu->size / 2.0f,
                                    bu->position.y + bu->size / 2.0f};
 
-            addBullet(bulletPosition, Vector2Scale(bu->velocity, -1), 5, true);
+            addBullet(bulletPosition, Vector2Scale(bu->velocity, -1), 6, true);
           }
           if (!ob->playerBullet) {
             Vector2 bulletPosition{ob->position.x + ob->size / 2.0f,
                                    ob->position.y + ob->size / 2.0f};
 
-            addBullet(bulletPosition, Vector2Scale(ob->velocity, -1), 5, true);
+            addBullet(bulletPosition, Vector2Scale(ob->velocity, -1), 6, true);
           }
         }
 
@@ -288,6 +288,6 @@ void World::draw() {
 
 void World::addBullet(Vector2 bulletPosition, Vector2 velocity, float size,
                       bool playerBullet) {
-  bullets.emplace_back(bulletPosition, velocity, size, playerBullet);
+  bullets.emplace_back(bulletPosition, velocity, size, 3, playerBullet);
 }
 } // namespace potato_bucket

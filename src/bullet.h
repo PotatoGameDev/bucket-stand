@@ -17,7 +17,6 @@ public:
   Rectangle box;
   bool playerBullet{false};
 
-  Bullet(float, float, Vector2, int = 1, int = 6, bool = false);
   Bullet(Vector2, Vector2, int = 1, int = 6, bool = false);
 
   void update();

@@ -68,7 +68,7 @@ Vector2 Player::update(int frameNo, std::vector<Bullet> &bullets,
         Vector2Normalize(Vector2Subtract(worldMousePosition, {box.x, box.y}));
     Vector2 bulletVelocity =
         Vector2Add(velocity, Vector2Scale(fromPlayerToMouse, bulletSpeed));
-    bullets.emplace_back(bulletPosition, bulletVelocity, 5, true);
+    bullets.emplace_back(bulletPosition, bulletVelocity, 5, 8, true);
 
     lastShotFrame = frameNo;
 
